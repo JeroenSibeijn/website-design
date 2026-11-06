@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalender – IJsvereniging Groningen</title>
+  <meta name="description" content="De activiteitenkalender van IJsvereniging Groningen: YVG-uur, clubwedstrijden, interclubs, workshops en andere activiteiten op Kardinge.">
+  <meta name="theme-color" content="#347631">
+  <link rel="icon" type="image/png" href="images/yvg-icon.png">
+  <link rel="apple-touch-icon" href="images/yvg-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Ubuntu:wght@500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <script src="js/layout.js" data-part="header"></script>
+
+  <main id="main">
+    <section class="page-banner">
+      <div class="container">
+        <nav class="crumbs" data-crumbs></nav>
+        <h1>Kalender</h1>
+        <p>Wedstrijden, workshops en het wekelijkse YVG-uur: dit staat er de komende weken op het programma.</p>
+      </div>
+    </section>
+
+    <div class="container content-layout">
+      <article class="prose">
+        <!-- CONTROLEREN: op een statische site werkt de kalender niet automatisch. Deze lijst moet met de hand worden bijgehouden: voeg nieuwe activiteiten toe en haal voorbije activiteiten weg. Overgenomen uit de maandweergave van november 2026 op yvg.nl (stand 6 november 2026); activiteiten vóór vandaag (YVG-clubwedstrijd 31 oktober, YVG-uur en de verplaatste slijpcursus van 1 november) zijn weggelaten. Volgens yvg.nl stonden er in totaal 42 activiteiten in de kalender; activiteiten na 6 december 2026 ontbreken nog. -->
+        <p>Hieronder vind je de activiteiten van YVG voor de komende weken. Klik op een activiteit voor meer informatie.</p>
+
+        <h2 class="month-title">November 2026</h2>
+        <ul class="event-list">
+          <li class="event">
+            <div class="event-date"><strong>8</strong><span>nov</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/slijpcursus-2/">Slijpcursus</a></h3>
+              <p>Zondag 15.30 – 17.00 uur · Workshop onder leiding van Gert Beenes Schaatsservice uit Bedum. Aanmelden via <a href="mailto:jeugdcommissie@yvg.nl">jeugdcommissie@yvg.nl</a>.</p>
+            </div>
+          </li>
+          <li class="event">
+            <div class="event-date"><strong>8</strong><span>nov</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/yvg-uur-5/">YVG-uur</a></h3>
+              <p>Zondag 17.00 – 18.00 uur · Alle leden schaatsen vrij op de 400 meterbaan.</p>
+            </div>
+          </li>
+          <li class="event">
+            <div class="event-date"><strong>14</strong><span>nov</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/yvg-interclub-voor-pupillen/">YVG-interclub voor pupillen</a></h3>
+              <p>Zaterdag 11.30 – 13.30 uur · Kardinge · Interclubwedstrijd van de wedstrijdcommissie, met twaalf clubs uit heel Nederland.</p>
+            </div>
+          </li>
+          <li class="event">
+            <div class="event-date"><strong>15</strong><span>nov</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/yvg-uur-6/">YVG-uur</a></h3>
+              <p>Zondag 17.00 – 18.00 uur · Alle leden schaatsen vrij op de 400 meterbaan.</p>
+            </div>
+          </li>
+          <li class="event">
+            <div class="event-date"><strong>22</strong><span>nov</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/geen-yvg-uur-11/">Geen YVG-uur</a></h3>
+              <p>Zondag · Het YVG-uur van 17.00 – 18.00 uur gaat deze week niet door.</p>
+            </div>
+          </li>
+          <li class="event">
+            <div class="event-date"><strong>29</strong><span>nov</span></div>
+            <div>
+              <!-- De reden (regiomarathon) komt uit de URL van de evenementpagina op yvg.nl. -->
+              <h3><a href="https://www.yvg.nl/activiteit/geen-yvg-uur-ivm-regiomarathon/">Geen YVG-uur</a></h3>
+              <p>Zondag · Het YVG-uur van 17.00 – 18.00 uur gaat niet door vanwege de regiomarathon.</p>
+            </div>
+          </li>
+        </ul>
+
+        <h2 class="month-title">December 2026</h2>
+        <ul class="event-list">
+          <li class="event">
+            <div class="event-date"><strong>6</strong><span>dec</span></div>
+            <div>
+              <h3><a href="https://www.yvg.nl/activiteit/yvg-uur-7/">YVG-uur</a></h3>
+              <p>Zondag 17.00 – 18.00 uur · Alle leden schaatsen vrij op de 400 meterbaan.</p>
+            </div>
+          </li>
+        </ul>
+      </article>
+
+      <aside class="sidebar">
+        <div class="side-card side-card--green">
+          <h2>YVG-uur</h2>
+          <p>Elke zondag hebben we de ijsbaan helemaal voor onszelf. Alle leden kunnen dan vrij schaatsen op de 400 meterbaan.</p>
+          <a href="yvg-uur.html" class="button button--light">Meer over het YVG-uur</a>
+        </div>
+        <div class="side-card">
+          <h2>Abonneren op de kalender</h2>
+          <p>Zet de activiteiten van YVG automatisch in je eigen agenda.</p>
+          <!-- CONTROLEREN: deze abonnementslinks halen de kalender op uit de huidige WordPress-site op yvg.nl en werken alleen zolang die site online is. -->
+          <ul>
+            <li><a href="https://www.google.com/calendar/render?cid=webcal%3A%2F%2Fwww.yvg.nl%2F%3Fpost_type%3Dtribe_events%26ical%3D1%26eventDisplay%3Dlist">Google Agenda</a></li>
+            <li><a href="webcal://www.yvg.nl/?post_type=tribe_events&amp;ical=1&amp;eventDisplay=list">iCalendar (Apple, Outlook)</a></li>
+            <li><a href="https://outlook.office.com/owa?path=/calendar/action/compose&amp;rru=addsubscription&amp;url=webcal%3A%2F%2Fwww.yvg.nl%2F%3Fpost_type%3Dtribe_events%26ical%3D1%26eventDisplay%3Dlist&amp;name=IJsvereniging+Groningen">Outlook 365</a></li>
+            <li><a href="https://outlook.live.com/owa?path=/calendar/action/compose&amp;rru=addsubscription&amp;url=webcal%3A%2F%2Fwww.yvg.nl%2F%3Fpost_type%3Dtribe_events%26ical%3D1%26eventDisplay%3Dlist&amp;name=IJsvereniging+Groningen">Outlook.com</a></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="js/layout.js" data-part="footer"></script>
+</body>
+</html>

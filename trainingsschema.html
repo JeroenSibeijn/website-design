@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trainingsschema generator – IJsvereniging Groningen</title>
+<meta name="description" content="Maak een willekeurig trainingsschema voor op of naast het ijs, voor langebaanschaatsers.">
+<meta name="theme-color" content="#347631">
+<link rel="icon" type="image/png" href="images/yvg-icon.png">
+<link rel="apple-touch-icon" href="images/yvg-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Ubuntu:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  /* Kleuren komen uit de huisstijl in css/style.css (licht en donker) */
+  :root {
+    --bg: var(--color-bg-alt);
+    --surface: var(--color-surface);
+    --surface-2: var(--color-surface-2);
+    --text: var(--color-text);
+    --muted: var(--color-muted);
+    --border: var(--color-border);
+    --accent: var(--color-primary);
+    --accent-hover: var(--color-primary-hover);
+    --accent-ink: var(--color-on-primary);
+    --accent-soft: var(--green-soft);
+    --danger: var(--color-danger);
+    /* Kleuren per soort oefening; de eerste is het clubgroen */
+    --c0: #347631; --c1: #2f6fe0; --c2: #e0522c; --c3: #c08600;
+    --c4: #8a4fd6; --c5: #d23f7a; --c6: #15899a; --c7: #6b7280;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --c0: #62b25c; --c1: #6d9cf5; --c2: #f06a43; --c3: #e3b03a; --c4: #ad85f0; --c5: #ef6fa2; --c6: #45b7c7; --c7: #9ca3af;
+    }
+  }
+  :root[data-theme="dark"] {
+    --c0: #62b25c; --c1: #6d9cf5; --c2: #f06a43; --c3: #e3b03a; --c4: #ad85f0; --c5: #ef6fa2; --c6: #45b7c7; --c7: #9ca3af;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  button:disabled { cursor: default; opacity: .35; }
+  [hidden] { display: none !important; }
+
+  /* De panelen schuiven een stukje over de groene paginakop */
+  .page { max-width: var(--max-width); margin: -56px auto 0; padding: 0 16px 72px; }
+  @media (min-width: 700px) { .page { padding: 0 24px 72px; } }
+
+  /* Wisselen tussen databases (in de groene paginakop) */
+  .db-switch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; background: rgba(0,0,0,.2); padding: 4px; border-radius: 12px; margin-top: 24px; max-width: 520px; }
+  .db-switch button { border: 0; background: none; padding: 9px 10px; border-radius: 9px; font-weight: 700; color: rgba(255,255,255,.85); text-align: center; }
+  .db-switch button:hover { background: rgba(255,255,255,.1); }
+  .db-switch button small { display: block; font-weight: 400; font-size: 13px; }
+  .db-switch button[aria-selected="true"] { background: #fff; color: var(--green-deep); box-shadow: 0 1px 3px rgba(0,0,0,.2); }
+
+  .layout { display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 24px; align-items: start; }
+  @media (max-width: 860px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+  .panel h2 { margin: 0; font-size: 20px; }
+  .step { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 14px; font-weight: 700; margin-right: 10px; vertical-align: 2px; }
+  .hint { color: var(--muted); font-size: 13px; margin: 6px 0 14px; }
+
+  input[type="text"], input[type="search"], select, textarea {
+    width: 100%; padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text);
+  }
+  textarea { resize: vertical; }
+
+  /* Soorten */
+  .cat-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .cat { border: 1px solid var(--border); border-radius: 10px; background: var(--surface); border-left: 4px solid var(--cc); transition: opacity .15s; }
+  .cat.off { opacity: .55; }
+  .cat.dragging { opacity: .4; outline: 2px dashed var(--cc); }
+  .cat-row { display: flex; align-items: center; gap: 8px; padding: 8px 8px 8px 6px; }
+  .handle { cursor: grab; color: var(--muted); padding: 4px 2px; user-select: none; font-size: 16px; line-height: 1; }
+  .cat-toggle { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; cursor: pointer; }
+  .cat-toggle input { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; flex: none; }
+  .cat-label { min-width: 0; display: grid; }
+  .cat-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cat-note { font-size: 12px; color: var(--danger); }
+  .stepper { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; flex: none; }
+  .stepper button { width: 28px; height: 30px; border: 0; background: var(--surface-2); }
+  .stepper .num { min-width: 26px; text-align: center; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .move { display: flex; gap: 2px; flex: none; }
+  .icon { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); display: inline-grid; place-items: center; line-height: 1; padding: 0; }
+  .icon:hover:not(:disabled) { background: var(--surface-2); }
+  .expand[aria-expanded="true"] { background: var(--surface-2); }
+  .expand span { display: inline-block; transition: transform .15s; }
+  .expand[aria-expanded="true"] span { transform: rotate(180deg); }
+  @media (max-width: 520px) { .handle { display: none; } .cat-row { padding-left: 10px; } .cat-name { white-space: normal; line-height: 1.2; } }
+
+  .cat-body { border-top: 1px solid var(--border); padding: 12px; display: grid; gap: 12px; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 420px) { .fields { grid-template-columns: 1fr; } }
+  .fields label, .form-grid label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  .sub { font-size: 12px; color: var(--muted); }
+  .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { border: 1px solid var(--border); background: var(--surface-2); border-radius: 999px; padding: 3px 10px; font-size: 13px; }
+  .chip:hover { border-color: var(--muted); }
+  .chip.is-off { background: none; color: var(--muted); text-decoration: line-through; }
+  .chip.no-gear { opacity: .55; border-style: dashed; }
+  .chip small { color: var(--muted); }
+  .empty-chips { color: var(--muted); font-size: 13px; }
+  .add-ex { display: grid; grid-template-columns: 1fr auto auto; gap: 6px; }
+  .add-ex select { width: auto; max-width: 140px; }
+  @media (max-width: 420px) { .add-ex { grid-template-columns: 1fr 1fr; } .add-ex input { grid-column: 1 / -1; } .add-ex select { max-width: none; width: 100%; } }
+
+  .btn { border: 1px solid var(--border); background: var(--surface); border-radius: 8px; padding: 7px 12px; font-weight: 600; white-space: nowrap; }
+  .btn:hover:not(:disabled) { background: var(--surface-2); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+  .btn-big { width: 100%; padding: 12px; font-size: 16px; border-radius: 10px; }
+  .link { border: 0; background: none; padding: 0; color: var(--muted); text-decoration: underline; font-size: 13px; }
+  .link:hover { color: var(--text); }
+  .link.danger { color: var(--danger); justify-self: start; }
+
+  .add-cat { width: 100%; margin-top: 8px; border: 1px dashed var(--border); background: none; border-radius: 10px; padding: 9px; color: var(--muted); font-weight: 600; }
+  .add-cat:hover { color: var(--text); border-color: var(--muted); }
+
+  .options { margin: 20px 0 16px; display: grid; gap: 16px; }
+  .opt-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .lap-row { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 4px; }
+  .lap-row input { width: 80px; padding: 7px 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text); font-variant-numeric: tabular-nums; }
+  .segmented { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--surface-2); padding: 3px; border-radius: 10px; }
+  .segmented input { position: absolute; opacity: 0; pointer-events: none; }
+  .segmented label { text-align: center; padding: 7px 4px; border-radius: 8px; cursor: pointer; font-size: 14px; color: var(--muted); }
+  .segmented input:checked + label { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  .segmented input:focus-visible + label { outline: 2px solid var(--accent); }
+  .gear { display: flex; flex-wrap: wrap; gap: 6px; }
+  .gear label { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px 4px 8px; font-size: 13px; cursor: pointer; }
+  .gear label:has(input:checked) { background: var(--accent-soft); border-color: var(--accent); }
+  .gear input { accent-color: var(--accent); margin: 0; }
+  .check { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+  .check input { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; }
+  .foot-links { text-align: center; margin-top: 12px; }
+  .max-note { text-align: center; margin: 8px 0 0; }
+
+  /* Schema */
+  .result-head, .db-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .result-head h2, .db-head h2 { flex: 1; min-width: 180px; }
+  .toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .pill { background: var(--surface-2); border-radius: 999px; padding: 3px 11px; font-size: 13px; font-weight: 600; }
+  .empty { text-align: center; color: var(--muted); padding: 48px 16px; border: 1px dashed var(--border); border-radius: 12px; }
+  .empty strong { display: block; color: var(--text); font-size: 16px; margin-bottom: 4px; }
+
+  .blocks { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .block { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .block-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; background: color-mix(in srgb, var(--cc) 10%, var(--surface)); border-bottom: 1px solid var(--border); }
+  .block-num { width: 30px; height: 30px; flex: none; border-radius: 50%; background: var(--cc); color: #fff; display: grid; place-items: center; font-weight: 700; }
+  .block-title { flex: 1; min-width: 0; }
+  .block-title h3 { margin: 0; font-size: 16px; }
+  .block-title p { margin: 0; font-size: 13px; color: var(--muted); }
+  .items { list-style: none; margin: 0; padding: 0; }
+  .item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-top: 1px solid var(--border); }
+  .item:first-child { border-top: 0; }
+  .item > input { width: 18px; height: 18px; accent-color: var(--cc); margin: 3px 0 0; flex: none; }
+  .item-main { flex: 1; min-width: 0; }
+  .item-name { border: 0; background: none; padding: 0; text-align: left; font-weight: 500; }
+  button.item-name { text-decoration: underline dotted var(--muted); text-underline-offset: 3px; }
+  .item-gear { display: inline-block; margin-left: 6px; font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 999px; padding: 0 7px; vertical-align: 1px; }
+  .item-info { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+  .item.done .item-name { text-decoration: line-through; color: var(--muted); }
+  .dose { text-align: right; line-height: 1.15; flex: none; padding-top: 2px; }
+  .dose strong { display: block; font-variant-numeric: tabular-nums; }
+  .dose small { display: block; color: var(--muted); font-size: 11px; }
+  .dose .dur { margin-top: 3px; color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .item .icon { flex: none; }
+
+  /* Database */
+  .db-panel { margin-top: 24px; }
+  .db-filters { display: grid; grid-template-columns: 1fr 200px 200px; gap: 8px; margin-bottom: 8px; }
+  @media (max-width: 700px) { .db-filters { grid-template-columns: 1fr 1fr; } .db-filters input { grid-column: 1 / -1; } }
+  .db-count { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  .ex-form { border: 1px solid var(--border); background: var(--surface-2); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .ex-form h3 { margin: 0 0 12px; font-size: 15px; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  @media (max-width: 560px) { .form-grid { grid-template-columns: minmax(0, 1fr); } }
+  .form-actions { display: flex; gap: 8px; margin-top: 12px; }
+  .ex-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .ex-grid .empty { grid-column: 1 / -1; padding: 24px 16px; }
+  .ex-card { border: 1px solid var(--border); border-top: 3px solid var(--cc); border-radius: 10px; padding: 12px; display: grid; gap: 6px; align-content: start; }
+  .ex-top { display: flex; align-items: baseline; gap: 6px; justify-content: space-between; }
+  .ex-top strong { font-size: 15px; }
+  .badge { font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 1px 8px; flex: none; }
+  .badge.edited { color: var(--muted); background: var(--surface-2); }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag { font-size: 12px; border-radius: 999px; padding: 1px 8px; background: var(--surface-2); }
+  .tag.soort { background: color-mix(in srgb, var(--cc) 15%, var(--surface)); }
+  .ex-muscles { font-size: 12px; color: var(--muted); }
+  .ex-card p { margin: 0; font-size: 13px; }
+  .ex-actions { display: flex; gap: 12px; margin-top: 2px; }
+
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: var(--text); color: var(--bg); padding: 10px 16px; border-radius: 10px; font-size: 14px; opacity: 0; pointer-events: none; transition: .2s; max-width: calc(100% - 32px); }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .site-header, .site-footer, .crumbs, .page-banner p, .db-switch, .settings, .toolbar, .item .icon, .block-head .btn, .db-panel, .toast, .skip-link { display: none !important; }
+    .page-banner { background: none; color: #000; padding: 0 0 12px; }
+    .page-banner .container, .page { padding: 0; margin: 0; max-width: none; }
+    .layout { display: block; }
+    .panel { box-shadow: none; border: 0; padding: 0; }
+    .block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<script src="js/layout.js" data-part="header"></script>
+
+<main id="main">
+<section class="page-banner">
+  <div class="container">
+    <nav class="crumbs" data-crumbs></nav>
+    <h1>Trainingsschema generator</h1>
+    <p>Voor langebaanschaatsers. Kies of je op het ijs of ernaast traint, kies je soorten oefeningen, zet ze in volgorde en laat een willekeurig schema maken.</p>
+    <div class="db-switch" id="dbSwitch" role="tablist" aria-label="Kies een database"></div>
+  </div>
+</section>
+
+<div class="page">
+  <div class="layout">
+    <section class="panel settings" aria-labelledby="set-title">
+      <h2 id="set-title"><span class="step">1</span>Kies en orden je oefeningen</h2>
+      <p class="hint">Vink aan wat je wilt doen. Bepaal de volgorde met de pijltjes of door te slepen aan ⠿. Met ▾ kies je welke oefeningen per soort mee mogen doen.</p>
+
+      <ol class="cat-list" id="catList"></ol>
+      <button class="add-cat" id="addCat" type="button">+ Eigen soort oefening toevoegen</button>
+
+      <div class="options">
+        <div id="lapField">
+          <label class="opt-label" for="lapTime">Rondetijd van je trainingsgroep</label>
+          <div class="lap-row">
+            <input type="number" id="lapTime" min="20" max="180" step="1" inputmode="numeric">
+            <span>seconden per ronde (400 m)</span>
+          </div>
+          <div class="sub">Hiermee wordt de tijd van rondes en sprints geschat.</div>
+        </div>
+        <div>
+          <div class="opt-label">Welk materiaal heb je?</div>
+          <div class="gear" id="gear"></div>
+        </div>
+        <div>
+          <div class="opt-label" id="lvl-label">Niveau</div>
+          <div class="segmented" role="radiogroup" aria-labelledby="lvl-label" id="levels">
+            <input type="radio" name="level" id="lv-licht" value="licht"><label for="lv-licht">Licht</label>
+            <input type="radio" name="level" id="lv-gemiddeld" value="gemiddeld"><label for="lv-gemiddeld">Gemiddeld</label>
+            <input type="radio" name="level" id="lv-zwaar" value="zwaar"><label for="lv-zwaar">Zwaar</label>
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="shuffleBlocks"> Volgorde van de soorten ook willekeurig maken</label>
+      </div>
+
+      <button class="btn btn-primary btn-big" id="generate" type="button">Genereer schema</button>
+      <p class="sub max-note">Een training duurt nooit langer dan 1,5 uur. Te lange schema's worden automatisch ingekort.</p>
+      <div class="foot-links"><button class="link" id="reset" type="button">Standaardinstellingen herstellen</button></div>
+    </section>
+
+    <section class="panel result" id="result" aria-labelledby="res-title">
+      <div class="result-head">
+        <h2 id="res-title"><span class="step">2</span>Jouw schema</h2>
+        <div class="toolbar" id="toolbar" hidden>
+          <button class="btn" id="regen" type="button">↻ Opnieuw</button>
+          <button class="btn" id="copy" type="button">Kopieer</button>
+          <button class="btn" id="print" type="button">Print</button>
+        </div>
+      </div>
+      <div id="schema"></div>
+    </section>
+  </div>
+
+  <section class="panel db-panel" id="dbPanel" aria-labelledby="db-title">
+    <div class="db-head">
+      <h2 id="db-title"><span class="step">3</span>Database: <span id="dbName"></span></h2>
+      <div class="toolbar">
+        <button class="btn btn-primary" id="newEx" type="button">+ Nieuwe oefening</button>
+        <button class="btn" id="exportEx" type="button">Exporteer eigen oefeningen</button>
+        <button class="btn" id="importEx" type="button">Importeer</button>
+        <input type="file" id="importFile" accept=".json,application/json" hidden>
+      </div>
+    </div>
+    <p class="hint">Alle oefeningen waaruit de generator kiest. Pas elke oefening aan met "Bewerken", voeg je eigen oefeningen toe, of deel ze met anderen via exporteren en importeren.</p>
+
+    <form class="ex-form" id="exForm" hidden>
+      <h3 id="exFormTitle">Nieuwe oefening</h3>
+      <div class="form-grid">
+        <label>Naam<input type="text" name="naam" required maxlength="60"></label>
+        <label>Soort<select name="soort"></select></label>
+        <label>Materiaal<select name="materiaal"></select></label>
+        <label>Vorm<select name="vorm"></select></label>
+        <label class="full">Waar is de oefening goed voor? (scheid met komma's)<input type="text" name="spieren" maxlength="120" placeholder="bijv. bochttechniek, balans"></label>
+        <label class="full">Uitleg<textarea name="uitleg" rows="3" maxlength="400" placeholder="Hoe doe je deze oefening?"></textarea></label>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Opslaan</button>
+        <button class="btn" type="button" id="exCancel">Annuleren</button>
+      </div>
+    </form>
+
+    <div class="db-filters">
+      <input type="search" id="dbSearch" placeholder="Zoek op naam, doel of uitleg…" aria-label="Zoeken">
+      <select id="dbSoort" aria-label="Filter op soort"></select>
+      <select id="dbMat" aria-label="Filter op materiaal"></select>
+    </div>
+    <p class="db-count" id="dbCount"></p>
+    <ul class="ex-grid" id="exGrid"></ul>
+  </section>
+</div>
+</main>
+
+<script src="js/layout.js" data-part="footer"></script>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/oefeningen-ijs.js"></script>
+<script src="js/oefeningen-droog.js"></script>
+<script>
+(() => {
+  const STORAGE_KEY = 'trainingsschema-v3';
+  const V2_KEY = 'trainingsschema-v2';
+  const V1_KEY = 'trainingsschema-v1';
+
+  // ---------- Hulpjes ----------
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const slug = (s) => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const clone = (x) => JSON.parse(JSON.stringify(x));
+  const randInt = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
+  const randStep = (min, max, step) => min + step * randInt(0, Math.floor((max - min) / step));
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  const sample = (arr, n) => shuffle([...arr]).slice(0, n);
+  const same = (a, b) => a.trim().toLowerCase() === b.trim().toLowerCase();
+
+  // ---------- Niveaus en vormen ----------
+  const LEVELS = {
+    licht:     { label: 'Licht',     sets: 2, reps: [8, 10],  time: [20, 30], single: [20, 30], rest: 45, minuten: [5, 8],   duur: [15, 20], rondeSets: 2, rondes: [1, 1], sprintSets: 3, sprint: [50, 75] },
+    gemiddeld: { label: 'Gemiddeld', sets: 3, reps: [10, 12], time: [30, 40], single: [30, 40], rest: 60, minuten: [8, 10],  duur: [20, 30], rondeSets: 3, rondes: [1, 2], sprintSets: 4, sprint: [75, 100] },
+    zwaar:     { label: 'Zwaar',     sets: 4, reps: [12, 15], time: [40, 50], single: [30, 45], rest: 75, minuten: [10, 15], duur: [30, 40], rondeSets: 4, rondes: [2, 3], sprintSets: 5, sprint: [100, 150] }
+  };
+
+  // Elke vorm weet hoe hij een dosering kiest, toont en hoe lang hij duurt (geschat)
+  const MODES = {
+    reps: {
+      label: 'Sets × herhalingen',
+      make: (L) => ({ sets: L.sets, reps: randInt(L.reps[0], L.reps[1]) }),
+      dose: (it) => ({ main: `${it.sets} × ${it.reps}`, sub: 'sets × herh.' }),
+      rest: (L) => `Rust ${L.rest} sec tussen de sets`,
+      secs: (it, L) => it.sets * (it.reps * 3 + L.rest)
+    },
+    interval: {
+      label: 'Sets × seconden',
+      make: (L) => ({ sets: L.sets, sec: randStep(L.time[0], L.time[1], 5) }),
+      dose: (it) => ({ main: `${it.sets} × ${it.sec} sec`, sub: 'sets × tijd' }),
+      rest: (L) => `Rust ${Math.round(L.rest / 2)} sec tussen de sets`,
+      secs: (it, L) => it.sets * (it.sec + Math.round(L.rest / 2))
+    },
+    single: {
+      label: 'Eenmalig (seconden)',
+      make: (L) => ({ sec: randStep(L.single[0], L.single[1], 5) }),
+      dose: (it) => ({ main: `${it.sec} sec`, sub: '' }),
+      rest: () => 'Oefeningen achter elkaar door',
+      secs: (it) => it.sec + 10
+    },
+    minuten: {
+      label: 'Blok van 5–15 minuten',
+      make: (L) => ({ min: randInt(L.minuten[0], L.minuten[1]) }),
+      dose: (it) => ({ main: `${it.min} min`, sub: '' }),
+      rest: () => 'In een rustig tempo',
+      secs: (it) => it.min * 60
+    },
+    duur: {
+      label: 'Duurblok van 15–40 minuten',
+      make: (L) => ({ min: randStep(L.duur[0], L.duur[1], 5) }),
+      dose: (it) => ({ main: `${it.min} min`, sub: 'duur' }),
+      rest: () => 'Gelijkmatig tempo waarin je nog kunt praten',
+      secs: (it) => it.min * 60
+    },
+    rondes: {
+      label: 'Sets × rondes',
+      make: (L) => ({ sets: L.rondeSets, rondes: randInt(L.rondes[0], L.rondes[1]) }),
+      dose: (it) => ({ main: `${it.sets} × ${it.rondes} ${it.rondes === 1 ? 'ronde' : 'rondes'}`, sub: 'sets × rondes' }),
+      rest: () => '1 ronde rustig uitschaatsen tussen de sets',
+      // rondes in jouw rondetijd + 1 rustige uitschaatsronde (iets langzamer) per set
+      secs: (it, L, lap) => it.sets * (it.rondes * lap + Math.round(lap * 1.2))
+    },
+    sprint: {
+      label: 'Sets × meters (sprint)',
+      make: (L) => ({ sets: L.sprintSets, m: randStep(L.sprint[0], L.sprint[1], 25) }),
+      dose: (it) => ({ main: `${it.sets} × ${it.m} m`, sub: 'sprints' }),
+      rest: () => 'Rustig terugschaatsen tussen de sprints',
+      // sprintsnelheid ± 25% hoger dan je gemiddelde rondesnelheid, plus 1 min terugschaatsen
+      secs: (it, L, lap) => it.sets * (Math.round(it.m / ((400 / lap) * 1.25)) + 60)
+    }
+  };
+  const validMode = (m) => (MODES[m] ? m : 'reps');
+
+  // ---------- Databases uit de js-bestanden ----------
+  const RAW = window.DATABASES || {};
+  const DB_KEYS = ['ijs', 'droog'].concat(Object.keys(RAW).filter((k) => k !== 'ijs' && k !== 'droog')).filter((k) => RAW[k]);
+  if (!DB_KEYS.length) {
+    document.querySelector('.layout').innerHTML = '<div class="panel">De oefeningen-databases konden niet geladen worden. Staan <code>js/oefeningen-ijs.js</code> en <code>js/oefeningen-droog.js</code> naast deze pagina?</div>';
+    return;
+  }
+  const DBS = {};
+  DB_KEYS.forEach((k) => {
+    const r = RAW[k];
+    const materiaal = Object.assign({ geen: 'Geen materiaal' }, r.materiaal || {});
+    DBS[k] = {
+      naam: r.naam || k,
+      materiaal,
+      standaardMateriaal: (r.standaardMateriaal || ['geen']).filter((m) => materiaal[m]),
+      cats: (r.soorten || []).map((s) => ({
+        id: s.id, name: s.naam || s.id, color: (s.kleur || 0) % 8, mode: validMode(s.vorm), count: s.aantal || 3, enabled: s.aan !== false
+      })),
+      builtin: (r.oefeningen || []).map((e) => ({
+        naam: e.naam, soort: e.soort,
+        materiaal: materiaal[e.materiaal] ? e.materiaal : 'geen',
+        vorm: MODES[e.vorm] ? e.vorm : '',
+        spieren: Array.isArray(e.spieren) ? e.spieren : [],
+        uitleg: e.uitleg || '',
+        id: e.soort + ':' + slug(e.naam)
+      }))
+    };
+  });
+
+  // ---------- Opslag ----------
+  const MAX_MINUTES = 90;              // regel: een training duurt nooit langer dan dit
+  const MAX_SECS = MAX_MINUTES * 60;
+  const DEFAULT_LAP = 45;              // seconden per ronde van 400 m
+  const LAP_MIN = 20, LAP_MAX = 180;
+  const validLap = (v) => (Number.isFinite(v) && v >= LAP_MIN && v <= LAP_MAX ? Math.round(v) : null);
+  const freshDb = (k) => ({
+    cats: clone(DBS[k].cats), custom: [], overrides: {}, excluded: {}, materiaal: [...DBS[k].standaardMateriaal],
+    level: 'gemiddeld', shuffleBlocks: false, lapTime: DEFAULT_LAP, schema: null
+  });
+  const fresh = () => ({ active: DB_KEYS[0], dbs: Object.fromEntries(DB_KEYS.map((k) => [k, freshDb(k)])) });
+
+  function validDb(s) {
+    return s && Array.isArray(s.cats) && Array.isArray(s.custom) && Array.isArray(s.materiaal)
+      && s.excluded && typeof s.excluded === 'object' && LEVELS[s.level];
+  }
+
+  // Versie 1: oefeningen zaten als lijstjes in de soorten
+  function migrateV1(old) {
+    if (!old || !Array.isArray(old.cats) || !DBS.droog) return null;
+    const s = freshDb('droog');
+    s.cats = old.cats.map((c) => ({ id: c.id, name: c.name, color: c.color, mode: c.mode, count: c.count, enabled: c.enabled }));
+    old.cats.forEach((c) => (c.exercises || []).forEach((naam) => {
+      const known = DBS.droog.builtin.some((e) => e.soort === c.id && same(e.naam, naam));
+      if (!known) s.custom.push({ id: 'u:' + uid(), naam, soort: c.id, materiaal: 'geen', vorm: '', spieren: [], uitleg: '' });
+    }));
+    if (LEVELS[old.level]) s.level = old.level;
+    s.shuffleBlocks = !!old.shuffleBlocks;
+    return s;
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (s && s.dbs) {
+          const st = fresh();
+          if (DB_KEYS.includes(s.active)) st.active = s.active;
+          DB_KEYS.forEach((k) => { if (validDb(s.dbs[k])) st.dbs[k] = s.dbs[k]; });
+          return st;
+        }
+      }
+      // Versie 2 had één database: die wordt "naast het ijs"
+      const v2 = localStorage.getItem(V2_KEY);
+      if (v2 && DBS.droog) {
+        const s = JSON.parse(v2);
+        if (validDb(s)) { const st = fresh(); st.dbs.droog = s; return st; }
+      }
+      const v1 = localStorage.getItem(V1_KEY);
+      if (v1) {
+        const m = migrateV1(JSON.parse(v1));
+        if (m) { const st = fresh(); st.dbs.droog = m; return st; }
+      }
+    } catch (e) { /* opslag niet beschikbaar */ }
+    return null;
+  }
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* opslag niet beschikbaar */ }
+  }
+
+  // Nieuwe standaardsoorten uit de database-bestanden toevoegen aan bewaarde instellingen
+  function tidy(k) {
+    const s = state.dbs[k];
+    // Soorten die uit het database-bestand zijn gehaald ook hier weghalen.
+    // Eigen soorten (zelf aangemaakt of met eigen oefeningen erin) blijven staan.
+    const defaults = new Set(DBS[k].cats.map((c) => c.id));
+    const isUserCat = (c) => c.eigen || /^c[0-9a-z]{11,}$/.test(c.id) || s.custom.some((e) => e.soort === c.id);
+    s.cats = s.cats.filter((c) => {
+      const keep = defaults.has(c.id) || isUserCat(c);
+      if (!keep && s.excluded) delete s.excluded[c.id];
+      return keep;
+    });
+    DBS[k].cats.forEach((c, i) => {
+      if (!s.cats.some((x) => x.id === c.id)) s.cats.splice(Math.min(i, s.cats.length), 0, clone(c));
+    });
+    s.cats.forEach((c) => { c.mode = validMode(c.mode); });
+    if (!s.materiaal.includes('geen')) s.materiaal.push('geen');
+    s.custom.forEach((e) => { if (!MODES[e.vorm]) e.vorm = ''; if (!Array.isArray(e.spieren)) e.spieren = []; });
+    // Aanpassingen aan standaardoefeningen (bewaard per oefening-id)
+    s.lapTime = validLap(s.lapTime) || DEFAULT_LAP;
+    if (!s.overrides || typeof s.overrides !== 'object') s.overrides = {};
+    Object.keys(s.overrides).forEach((id) => { if (!DBS[k].builtin.some((b) => b.id === id)) delete s.overrides[id]; });
+  }
+
+  let state = load() || fresh();
+  DB_KEYS.forEach(tidy);
+  const openIds = new Set();
+
+  // Huidige database (D = vaste gegevens, S = jouw instellingen)
+  const D = () => DBS[state.active];
+  const S = () => state.dbs[state.active];
+
+  // Standaardoefeningen met jouw aanpassingen erover heen (het id blijft altijd hetzelfde)
+  const builtinEx = () => {
+    const o = S().overrides;
+    return D().builtin.map((e) => (o[e.id] ? { ...e, ...o[e.id], id: e.id, edited: true } : e));
+  };
+  const allEx = () => builtinEx().concat(S().custom);
+  const isOwn = (id) => id.startsWith('u:');
+  const itemLabel = (it) => { const ex = exById(it.exId); return ex ? ex.naam : it.name; };
+  const exById = (id) => allEx().find((e) => e.id === id);
+  const findCat = (id) => S().cats.find((c) => c.id === id);
+  const isDefaultCat = (id) => D().cats.some((c) => c.id === id);
+  const isExcluded = (catId, exId) => (S().excluded[catId] || []).includes(exId);
+  const hasGear = (e) => e.materiaal === 'geen' || S().materiaal.includes(e.materiaal);
+  const soortEx = (catId) => allEx().filter((e) => e.soort === catId);
+  const pool = (cat) => soortEx(cat.id).filter((e) => hasGear(e) && !isExcluded(cat.id, e.id));
+  const shownCount = (cat) => Math.min(cat.count, pool(cat).length);
+  const soortName = (id) => { const c = findCat(id); return c ? c.name : 'Onbekende soort'; };
+  const soortColor = (id) => { const c = findCat(id); return c ? c.color % 8 : 7; };
+  const matLabel = (k) => D().materiaal[k] || k;
+
+  function addCustom(data) {
+    const dup = allEx().some((e) => e.soort === data.soort && same(e.naam, data.naam));
+    if (dup) return false;
+    S().custom.push({
+      id: 'u:' + uid(), naam: data.naam, soort: data.soort, materiaal: data.materiaal,
+      vorm: MODES[data.vorm] ? data.vorm : '', spieren: data.spieren || [], uitleg: data.uitleg || ''
+    });
+    return true;
+  }
+
+  let toastTimer;
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  const matOptions = (selected) => Object.entries(D().materiaal)
+    .map(([k, v]) => `<option value="${esc(k)}" ${k === selected ? 'selected' : ''}>${esc(v)}</option>`).join('');
+  const modeOptions = (selected) => Object.entries(MODES)
+    .map(([k, m]) => `<option value="${k}" ${k === selected ? 'selected' : ''}>${m.label}</option>`).join('');
+
+  // ---------- Wisselen tussen databases ----------
+  function renderSwitch() {
+    $('dbSwitch').innerHTML = DB_KEYS.map((k) => {
+      const n = DBS[k].builtin.length + state.dbs[k].custom.length;
+      return `<button type="button" role="tab" data-db="${esc(k)}" aria-selected="${k === state.active}">${esc(DBS[k].naam)}<small>${n} oefeningen</small></button>`;
+    }).join('');
+  }
+  $('dbSwitch').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-db]');
+    if (!btn || btn.dataset.db === state.active) return;
+    switchTo(btn.dataset.db);
+  });
+  function switchTo(k) {
+    state.active = k;
+    openIds.clear();
+    closeForm();
+    $('dbSearch').value = '';
+    $('dbSoort').value = '';
+    $('dbMat').value = '';
+    save();
+    renderAll();
+  }
+
+  // ---------- Soorten ----------
+  const catList = $('catList');
+
+  function renderCats() {
+    const cats = S().cats;
+    const last = cats.length - 1;
+    catList.innerHTML = cats.map((c, i) => {
+      const open = openIds.has(c.id);
+      const avail = pool(c).length;
+      const n = shownCount(c);
+      const list = soortEx(c.id);
+      return `
+      <li class="cat ${c.enabled ? '' : 'off'}" data-id="${esc(c.id)}" style="--cc: var(--c${c.color % 8})">
+        <div class="cat-row">
+          <span class="handle" title="Sleep om te verplaatsen" aria-hidden="true">⠿</span>
+          <label class="cat-toggle">
+            <input type="checkbox" data-action="toggle" ${c.enabled ? 'checked' : ''}>
+            <span class="cat-label">
+              <span class="cat-name">${esc(c.name)}</span>
+              ${c.enabled && !avail ? '<span class="cat-note">Geen oefeningen beschikbaar</span>' : ''}
+            </span>
+          </label>
+          <div class="stepper" title="Aantal oefeningen uit deze soort">
+            <button type="button" data-action="dec" ${n <= 1 ? 'disabled' : ''} aria-label="Minder oefeningen">−</button>
+            <span class="num" aria-label="${n} oefeningen">${n}</span>
+            <button type="button" data-action="inc" ${n >= avail ? 'disabled' : ''} aria-label="Meer oefeningen">+</button>
+          </div>
+          <div class="move">
+            <button type="button" class="icon" data-action="up" ${i === 0 ? 'disabled' : ''} aria-label="Omhoog">↑</button>
+            <button type="button" class="icon" data-action="down" ${i === last ? 'disabled' : ''} aria-label="Omlaag">↓</button>
+          </div>
+          <button type="button" class="icon expand" data-action="expand" aria-expanded="${open}" aria-label="Oefeningen kiezen"><span>▾</span></button>
+        </div>
+        ${open ? `
+        <div class="cat-body">
+          <div class="fields">
+            <label>Naam<input type="text" data-action="rename" value="${esc(c.name)}" maxlength="40"></label>
+            <label>Vorm<select data-action="mode">${modeOptions(c.mode)}</select></label>
+          </div>
+          ${list.length ? `
+          <div class="sub">${avail} van ${list.length} oefeningen doen mee. Klik op een oefening om hem aan of uit te zetten. Gestippelde oefeningen hebben materiaal nodig dat je niet hebt aangevinkt.</div>
+          <ul class="chips">${list.map((e) => {
+            const off = isExcluded(c.id, e.id);
+            const noGear = !hasGear(e);
+            return `<li><button type="button" class="chip ${off ? 'is-off' : ''} ${noGear ? 'no-gear' : ''}" data-action="togex" data-ex="${esc(e.id)}" aria-pressed="${!off}">${esc(e.naam)}${noGear ? ` <small>(${esc(matLabel(e.materiaal))})</small>` : ''}</button></li>`;
+          }).join('')}</ul>`
+          : `<div class="empty-chips">Nog geen oefeningen in deze soort. Voeg er hieronder een paar toe.</div>`}
+          <form class="add-ex">
+            <input type="text" name="naam" placeholder="Nieuwe oefening (komma's voor meerdere)" aria-label="Nieuwe oefening" maxlength="200">
+            <select name="materiaal" aria-label="Materiaal">${matOptions('geen')}</select>
+            <button class="btn" type="submit">Toevoegen</button>
+          </form>
+          ${isDefaultCat(c.id) ? '' : '<button type="button" class="link danger" data-action="delcat">Deze soort verwijderen</button>'}
+        </div>` : ''}
+      </li>`;
+    }).join('');
+    $('lapField').hidden = !usesLaps();
+  }
+
+  function moveCat(from, to) {
+    const cats = S().cats;
+    if (to < 0 || to >= cats.length) return;
+    const [c] = cats.splice(from, 1);
+    cats.splice(to, 0, c);
+  }
+
+  catList.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const li = btn.closest('.cat');
+    const cat = findCat(li.dataset.id);
+    const s = S();
+    const idx = s.cats.indexOf(cat);
+    const n = shownCount(cat);
+    let refreshDb = false;
+    switch (btn.dataset.action) {
+      case 'inc': cat.count = Math.min(n + 1, pool(cat).length); break;
+      case 'dec': cat.count = Math.max(1, n - 1); break;
+      case 'up': moveCat(idx, idx - 1); break;
+      case 'down': moveCat(idx, idx + 1); break;
+      case 'expand': openIds.has(cat.id) ? openIds.delete(cat.id) : openIds.add(cat.id); break;
+      case 'togex': {
+        const list = s.excluded[cat.id] || (s.excluded[cat.id] = []);
+        const at = list.indexOf(btn.dataset.ex);
+        if (at >= 0) list.splice(at, 1); else list.push(btn.dataset.ex);
+        break;
+      }
+      case 'delcat': {
+        const own = s.custom.filter((x) => x.soort === cat.id).length;
+        const msg = own ? `"${cat.name}" verwijderen? Je ${own} eigen oefening(en) in deze soort worden ook verwijderd.` : `"${cat.name}" verwijderen?`;
+        if (!confirm(msg)) return;
+        s.cats.splice(idx, 1);
+        s.custom = s.custom.filter((x) => x.soort !== cat.id);
+        delete s.excluded[cat.id];
+        refreshDb = true;
+        break;
+      }
+      default: return;
+    }
+    save();
+    renderCats();
+    if (refreshDb) { renderDb(); renderSwitch(); }
+    // focus terugzetten zodat toetsenbordgebruik prettig blijft
+    const sel = btn.dataset.ex ? `[data-ex="${CSS.escape(btn.dataset.ex)}"]` : `[data-action="${btn.dataset.action}"]`;
+    const again = catList.querySelector(`.cat[data-id="${CSS.escape(cat.id)}"] ${sel}`);
+    if (again && !again.disabled) again.focus();
+  });
+
+  catList.addEventListener('change', (e) => {
+    const t = e.target;
+    const li = t.closest('.cat');
+    if (!li) return;
+    const cat = findCat(li.dataset.id);
+    if (t.dataset.action === 'toggle') cat.enabled = t.checked;
+    else if (t.dataset.action === 'mode') { cat.mode = validMode(t.value); $('lapField').hidden = !usesLaps(); }
+    else if (t.dataset.action === 'rename') cat.name = t.value.trim() || cat.name;
+    else return;
+    save();
+    renderCats();
+    if (t.dataset.action === 'rename') renderDb();
+  });
+
+  catList.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const cat = findCat(form.closest('.cat').dataset.id);
+    const materiaal = form.elements.materiaal.value;
+    const names = form.elements.naam.value.split(',').map((s) => s.trim().slice(0, 60)).filter(Boolean);
+    if (!names.length) return;
+    let added = 0;
+    names.forEach((naam) => { if (addCustom({ naam, soort: cat.id, materiaal })) added++; });
+    if (!added) toast('Die oefening staat er al in');
+    else if (!hasGear({ materiaal })) toast(`Toegevoegd. Vink "${matLabel(materiaal)}" aan bij materiaal om hem te gebruiken.`);
+    else toast(added === 1 ? 'Oefening toegevoegd aan de database' : `${added} oefeningen toegevoegd aan de database`);
+    save();
+    renderCats();
+    renderDb();
+    renderSwitch();
+    const again = catList.querySelector(`.cat[data-id="${CSS.escape(cat.id)}"] .add-ex input`);
+    if (again) again.focus();
+  });
+
+  // Slepen om te ordenen (alleen via het handvat)
+  let dragging = null;
+  catList.addEventListener('pointerdown', (e) => {
+    const h = e.target.closest('.handle');
+    if (h) h.closest('.cat').draggable = true;
+  });
+  document.addEventListener('pointerup', () => {
+    catList.querySelectorAll('.cat[draggable="true"]').forEach((li) => { if (li !== dragging) li.draggable = false; });
+  });
+  catList.addEventListener('dragstart', (e) => {
+    dragging = e.target.closest('.cat');
+    if (!dragging) return;
+    dragging.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', dragging.dataset.id);
+  });
+  catList.addEventListener('dragover', (e) => {
+    if (!dragging) return;
+    e.preventDefault();
+    const others = [...catList.querySelectorAll('.cat:not(.dragging)')];
+    const after = others.find((el) => {
+      const r = el.getBoundingClientRect();
+      return e.clientY < r.top + r.height / 2;
+    });
+    if (after) { if (after !== dragging.nextSibling) catList.insertBefore(dragging, after); }
+    else if (catList.lastElementChild !== dragging) catList.appendChild(dragging);
+  });
+  catList.addEventListener('drop', (e) => e.preventDefault());
+  catList.addEventListener('dragend', () => {
+    if (!dragging) return;
+    const order = [...catList.children].map((li) => li.dataset.id);
+    S().cats.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
+    dragging = null;
+    save();
+    renderCats();
+  });
+
+  $('addCat').addEventListener('click', () => {
+    const cats = S().cats;
+    const used = new Set(cats.map((c) => c.color % 8));
+    let color = [5, 7, 0, 1, 2, 3, 4, 6].find((k) => !used.has(k));
+    if (color === undefined) color = cats.length % 8;
+    const cat = { id: 'c' + uid(), name: 'Nieuwe soort', color, mode: S() === state.dbs.ijs ? 'rondes' : 'reps', count: 3, enabled: true, eigen: true };
+    cats.push(cat);
+    openIds.add(cat.id);
+    save();
+    renderCats();
+    renderDb();
+    const input = catList.querySelector(`.cat[data-id="${cat.id}"] [data-action="rename"]`);
+    if (input) { input.focus(); input.select(); }
+  });
+
+  // ---------- Opties ----------
+  function renderOptions() {
+    const s = S();
+    $('gear').innerHTML = Object.entries(D().materiaal).map(([k, v]) => `
+      <label><input type="checkbox" value="${esc(k)}" ${k === 'geen' || s.materiaal.includes(k) ? 'checked' : ''} ${k === 'geen' ? 'disabled' : ''}>${esc(v)}</label>`).join('');
+    document.querySelectorAll('input[name="level"]').forEach((r) => { r.checked = r.value === s.level; });
+    $('shuffleBlocks').checked = !!s.shuffleBlocks;
+    $('lapTime').value = s.lapTime;
+    $('lapField').hidden = !usesLaps();
+  }
+
+  // Rondetijd: tijden in het schema meteen bijwerken tijdens het typen
+  $('lapTime').addEventListener('input', (e) => {
+    const v = validLap(parseFloat(e.target.value));
+    if (!v) return;
+    S().lapTime = v;
+    save();
+    renderSchema();
+  });
+  $('lapTime').addEventListener('change', (e) => {
+    if (!validLap(parseFloat(e.target.value))) toast(`Vul een rondetijd in tussen ${LAP_MIN} en ${LAP_MAX} seconden`);
+    e.target.value = S().lapTime;
+    // Langzamere rondetijd kan de training te lang maken: dan inkorten
+    const s = S();
+    if (s.schema && estimateSeconds(s.schema) > MAX_SECS) {
+      const fit = fitToMax(s.schema);
+      save();
+      renderSchema();
+      toastFit(fit);
+    }
+  });
+  $('gear').addEventListener('change', () => {
+    S().materiaal = [...$('gear').querySelectorAll('input:checked')].map((i) => i.value);
+    save();
+    renderCats();
+  });
+  $('levels').addEventListener('change', (e) => { S().level = e.target.value; save(); });
+  $('shuffleBlocks').addEventListener('change', (e) => { S().shuffleBlocks = e.target.checked; save(); });
+
+  $('reset').addEventListener('click', () => {
+    if (!confirm(`Instellingen van "${D().naam}" terugzetten naar de standaard? Je eigen oefeningen en eigen soorten blijven bewaard.`)) return;
+    const old = S();
+    const keepCats = old.cats.filter((c) => !isDefaultCat(c.id)).map((c) => ({ ...c, enabled: false }));
+    const s = freshDb(state.active);
+    s.cats = s.cats.concat(keepCats);
+    s.custom = old.custom;
+    s.overrides = old.overrides || {};
+    s.lapTime = old.lapTime; // rondetijd van je groep blijft staan
+    state.dbs[state.active] = s;
+    openIds.clear();
+    save();
+    renderAll();
+  });
+
+  // ---------- Schema maken ----------
+  function makeItem(ex, catMode, level) {
+    const mode = ex.vorm || catMode;
+    return { exId: ex.id, name: ex.naam, mode, done: false, ...MODES[mode].make(LEVELS[level]) };
+  }
+  const itemMode = (it, block) => validMode(it.mode || block.mode);
+
+  function generate() {
+    const s = S();
+    let cats = s.cats.filter((c) => c.enabled && pool(c).length);
+    if (!cats.length) {
+      toast('Vink minstens één soort aan waarin oefeningen beschikbaar zijn');
+      return;
+    }
+    if (s.shuffleBlocks) cats = shuffle([...cats]);
+    s.schema = {
+      level: s.level,
+      blocks: cats.map((c) => ({
+        catId: c.id, name: c.name, color: c.color, mode: c.mode,
+        items: sample(pool(c), shownCount(c)).map((ex) => makeItem(ex, c.mode, s.level))
+      }))
+    };
+    const fit = fitToMax(s.schema);
+    save();
+    renderSchema();
+    toastFit(fit);
+    if (window.matchMedia('(max-width: 860px)').matches) {
+      $('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+  $('generate').addEventListener('click', generate);
+  $('regen').addEventListener('click', generate);
+
+  function estimateSeconds(schema) {
+    const L = LEVELS[schema.level];
+    let total = 0;
+    schema.blocks.forEach((b) => b.items.forEach((it) => { total += itemSecs(it, b, schema.level); }));
+    return total;
+  }
+  const restText = (b, level) => MODES[validMode(b.mode)].rest(LEVELS[level]);
+
+  // Geschatte duur van één oefening of een heel blok (inclusief rust)
+  const itemSecs = (it, b, level) => MODES[itemMode(it, b)].secs(it, LEVELS[level], S().lapTime || DEFAULT_LAP);
+  const LAP_MODES = ['rondes', 'sprint'];
+  const usesLaps = () => S().cats.some((c) => LAP_MODES.includes(c.mode)) || allEx().some((e) => LAP_MODES.includes(e.vorm));
+  const blockSecs = (b, level) => b.items.reduce((t, it) => t + itemSecs(it, b, level), 0);
+  // ---------- Regel: maximaal MAX_MINUTES per training ----------
+  // Kan deze oefening lichter? Zo ja: hoe (minder rondes, sets of minuten)
+  function shrink(it, mode, apply) {
+    if (mode === 'rondes' && it.rondes > 1) { if (apply) it.rondes--; return true; }
+    if (it.sets > 1 && mode !== 'single' && mode !== 'minuten' && mode !== 'duur') { if (apply) it.sets--; return true; }
+    if ((mode === 'minuten' || mode === 'duur') && it.min > 5) { if (apply) it.min = Math.max(5, it.min - 5); return true; }
+    if (mode === 'single' && it.sec > 20) { if (apply) it.sec -= 5; return true; }
+    return false;
+  }
+
+  // Kort een schema in tot het binnen de maximale tijd past.
+  // Met onlyBlock wordt alleen dat ene blok aangepast (bij "Hussel").
+  function fitToMax(schema, onlyBlock) {
+    const lvl = schema.level;
+    const res = { removed: 0, lighter: 0, blocks: 0 };
+    const blocks = () => (onlyBlock ? [onlyBlock] : schema.blocks);
+    let total = estimateSeconds(schema);
+
+    // 1. Langste oefening weghalen uit een blok met meer dan één oefening
+    while (total > MAX_SECS) {
+      let best = null;
+      blocks().forEach((b) => {
+        if (b.items.length < 2) return;
+        b.items.forEach((it, i) => {
+          const t = itemSecs(it, b, lvl);
+          if (!best || t > best.t) best = { b, i, t };
+        });
+      });
+      if (!best) break;
+      best.b.items.splice(best.i, 1);
+      res.removed++;
+      total = estimateSeconds(schema);
+    }
+
+    // 2. Langste oefening lichter maken
+    let guard = 500;
+    while (total > MAX_SECS && guard--) {
+      let best = null;
+      blocks().forEach((b) => b.items.forEach((it) => {
+        if (!shrink(it, itemMode(it, b), false)) return;
+        const t = itemSecs(it, b, lvl);
+        if (!best || t > best.t) best = { b, it, t };
+      }));
+      if (!best) break;
+      shrink(best.it, itemMode(best.it, best.b), true);
+      res.lighter++;
+      total = estimateSeconds(schema);
+    }
+
+    // 3. Uiterste noodgreep: een blok uit het midden weghalen (eerste en laatste blok blijven)
+    while (!onlyBlock && total > MAX_SECS && schema.blocks.length > 1) {
+      const middle = schema.blocks.length > 2 ? schema.blocks.slice(1, -1) : [schema.blocks[schema.blocks.length - 1]];
+      const longest = middle.reduce((a, b) => (blockSecs(b, lvl) > blockSecs(a, lvl) ? b : a));
+      schema.blocks.splice(schema.blocks.indexOf(longest), 1);
+      res.blocks++;
+      total = estimateSeconds(schema);
+    }
+    return res;
+  }
+
+  function toastFit(res) {
+    const parts = [];
+    if (res.removed) parts.push(`${res.removed} oefening(en) minder`);
+    if (res.lighter) parts.push(`${res.lighter}× lichter gemaakt`);
+    if (res.blocks) parts.push(`${res.blocks} blok(ken) minder`);
+    if (parts.length) toast(`Ingekort tot maximaal ${fmtDur(MAX_SECS).replace('± ', '')}: ${parts.join(', ')}`);
+  }
+
+  const fmtDur = (secs) => (secs < 60 ? `± ${Math.max(5, Math.round(secs / 5) * 5)} sec` : `± ${Math.round(secs / 60)} min`);
+
+  function renderSchema() {
+    const box = $('schema');
+    const s = S().schema;
+    $('toolbar').hidden = !s;
+    if (!s || !s.blocks.length) {
+      box.innerHTML = `<div class="empty"><strong>Nog geen schema</strong>Kies je soorten oefeningen en klik op "Genereer schema".</div>`;
+      return;
+    }
+    const count = s.blocks.reduce((n, b) => n + b.items.length, 0);
+    const min = Math.max(1, Math.round(estimateSeconds(s) / 60));
+    box.innerHTML = `
+      <div class="meta">
+        <span class="pill">${esc(D().naam)}</span>
+        <span class="pill">Niveau: ${LEVELS[s.level].label}</span>
+        <span class="pill">± ${min} min</span>
+        ${s.blocks.some((b) => b.items.some((it) => LAP_MODES.includes(itemMode(it, b)))) ? `<span class="pill">Rondetijd ${S().lapTime} sec</span>` : ''}
+        <span class="pill">${count} oefeningen</span>
+      </div>
+      <ol class="blocks">
+        ${s.blocks.map((b, bi) => `
+        <li class="block" style="--cc: var(--c${b.color % 8})">
+          <div class="block-head">
+            <span class="block-num">${bi + 1}</span>
+            <div class="block-title">
+              <h3>${esc(b.name)}</h3>
+              <p>${esc(restText(b, s.level))} · ${fmtDur(blockSecs(b, s.level))}</p>
+            </div>
+            <button type="button" class="btn" data-action="reblock" data-b="${bi}" title="Kies nieuwe oefeningen voor dit blok">↻ Hussel</button>
+          </div>
+          <ol class="items">
+            ${b.items.map((it, ii) => {
+              const d = MODES[itemMode(it, b)].dose(it);
+              const dur = fmtDur(itemSecs(it, b, s.level));
+              const ex = exById(it.exId);
+              const gear = ex && ex.materiaal !== 'geen' ? `<span class="item-gear">${esc(matLabel(ex.materiaal))}</span>` : '';
+              const label = ex ? ex.naam : it.name;
+              const name = ex && ex.uitleg
+                ? `<button type="button" class="item-name" data-action="info" aria-expanded="false" title="Toon uitleg">${esc(label)}</button>${gear}<p class="item-info" hidden>${esc(ex.uitleg)}</p>`
+                : `<span class="item-name">${esc(label)}</span>${gear}`;
+              return `
+              <li class="item ${it.done ? 'done' : ''}">
+                <input type="checkbox" data-action="done" data-b="${bi}" data-i="${ii}" ${it.done ? 'checked' : ''} aria-label="${esc(it.name)} afvinken">
+                <div class="item-main">${name}</div>
+                <span class="dose"><strong>${esc(d.main)}</strong>${d.sub ? `<small>${esc(d.sub)}</small>` : ''}<small class="dur" title="Geschatte tijd, inclusief rust">⏱ ${dur}</small></span>
+                <button type="button" class="icon" data-action="swap" data-b="${bi}" data-i="${ii}" title="Andere oefening" aria-label="Vervang ${esc(it.name)}">↻</button>
+              </li>`;
+            }).join('')}
+          </ol>
+        </li>`).join('')}
+      </ol>`;
+  }
+
+  $('schema').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    const s = S().schema;
+    if (!btn || !s) return;
+
+    if (btn.dataset.action === 'info') {
+      const info = btn.parentElement.querySelector('.item-info');
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', open);
+      info.hidden = !open;
+      return;
+    }
+
+    const block = s.blocks[+btn.dataset.b];
+    const cat = findCat(block.catId);
+    const avail = cat ? pool(cat) : [];
+    if (!avail.length) { toast('Er zijn geen oefeningen meer beschikbaar in deze soort'); return; }
+
+    if (btn.dataset.action === 'reblock') {
+      const n = Math.min(Math.max(block.items.length, 1), avail.length);
+      block.items = sample(avail, n).map((ex) => makeItem(ex, block.mode, s.level));
+      toastFit(fitToMax(s, block)); // alleen dit blok inkorten als het te lang wordt
+    } else if (btn.dataset.action === 'swap') {
+      const i = +btn.dataset.i;
+      const inUse = new Set(block.items.map((it) => it.exId));
+      const options = avail.filter((x) => !inUse.has(x.id));
+      if (!options.length) { toast('Geen andere oefeningen meer in deze soort'); return; }
+      // Alleen vervangen door een oefening waarmee de training binnen de maximale tijd blijft
+      const rest = estimateSeconds(s) - itemSecs(block.items[i], block, s.level);
+      const fits = options.map((ex) => makeItem(ex, block.mode, s.level)).filter((it) => rest + itemSecs(it, block, s.level) <= MAX_SECS);
+      if (!fits.length) { toast(`Geen andere oefening past binnen ${MAX_MINUTES} minuten`); return; }
+      block.items[i] = fits[randInt(0, fits.length - 1)];
+    } else return;
+    save();
+    renderSchema();
+  });
+
+  $('schema').addEventListener('change', (e) => {
+    const t = e.target;
+    const s = S().schema;
+    if (t.dataset.action !== 'done' || !s) return;
+    const it = s.blocks[+t.dataset.b].items[+t.dataset.i];
+    it.done = t.checked;
+    t.closest('.item').classList.toggle('done', t.checked);
+    save();
+  });
+
+  // ---------- Kopiëren en printen ----------
+  function schemaAsText() {
+    const s = S().schema;
+    const min = Math.max(1, Math.round(estimateSeconds(s) / 60));
+    const lines = [`Trainingsschema ${D().naam.toLowerCase()} (${LEVELS[s.level].label}, ± ${min} min)`, ''];
+    s.blocks.forEach((b, bi) => {
+      lines.push(`${bi + 1}. ${b.name} (${restText(b, s.level).toLowerCase()}, ${fmtDur(blockSecs(b, s.level))})`);
+      b.items.forEach((it) => lines.push(`   - ${itemLabel(it)}: ${MODES[itemMode(it, b)].dose(it).main} (${fmtDur(itemSecs(it, b, s.level))})`));
+      lines.push('');
+    });
+    return lines.join('\n').trim();
+  }
+
+  $('copy').addEventListener('click', async () => {
+    const text = schemaAsText();
+    try {
+      await navigator.clipboard.writeText(text);
+      toast('Schema gekopieerd');
+    } catch (e) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); toast('Schema gekopieerd'); } catch (err) { toast('Kopiëren lukte niet'); }
+      ta.remove();
+    }
+  });
+  $('print').addEventListener('click', () => window.print());
+
+  // ---------- Database-scherm ----------
+  const dbSearch = $('dbSearch'), dbSoort = $('dbSoort'), dbMat = $('dbMat'), exForm = $('exForm');
+  let editingId = null;
+
+  function renderDbFilters() {
+    const cats = S().cats;
+    const sv = dbSoort.value, mv = dbMat.value;
+    dbSoort.innerHTML = '<option value="">Alle soorten</option>' + cats.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+    dbMat.innerHTML = '<option value="">Al het materiaal</option>' + matOptions('');
+    dbSoort.value = [...dbSoort.options].some((o) => o.value === sv) ? sv : '';
+    dbMat.value = [...dbMat.options].some((o) => o.value === mv) ? mv : '';
+
+    const f = exForm.elements;
+    const fs = f.soort.value, fm = f.materiaal.value || 'geen', fv = f.vorm.value;
+    f.soort.innerHTML = cats.map((c) => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
+    if (findCat(fs)) f.soort.value = fs;
+    f.materiaal.innerHTML = matOptions(D().materiaal[fm] ? fm : 'geen');
+    f.vorm.innerHTML = '<option value="">Zoals de soort</option>' + modeOptions(fv);
+  }
+
+  function renderDb() {
+    $('dbName').textContent = D().naam;
+    renderDbFilters();
+    const q = dbSearch.value.trim().toLowerCase();
+    const order = S().cats.map((c) => c.id);
+    const rank = (id) => { const i = order.indexOf(id); return i < 0 ? 999 : i; };
+    const all = allEx();
+    const list = all
+      .filter((e) => !dbSoort.value || e.soort === dbSoort.value)
+      .filter((e) => !dbMat.value || e.materiaal === dbMat.value)
+      .filter((e) => !q || [e.naam, e.uitleg, e.spieren.join(' ')].join(' ').toLowerCase().includes(q))
+      .sort((a, b) => rank(a.soort) - rank(b.soort) || a.naam.localeCompare(b.naam, 'nl'));
+
+    $('dbCount').textContent = `${list.length} van ${all.length} oefeningen · ${S().custom.length} eigen`;
+    $('exGrid').innerHTML = list.length ? list.map((e) => {
+      const own = isOwn(e.id);
+      const badge = own ? '<span class="badge">Eigen</span>' : (e.edited ? '<span class="badge edited">Aangepast</span>' : '');
+      return `
+      <li class="ex-card" style="--cc: var(--c${soortColor(e.soort)})">
+        <div class="ex-top"><strong>${esc(e.naam)}</strong>${badge}</div>
+        <div class="tags">
+          <span class="tag soort">${esc(soortName(e.soort))}</span>
+          <span class="tag">${esc(matLabel(e.materiaal))}</span>
+          ${e.vorm ? `<span class="tag">${esc(MODES[e.vorm].label)}</span>` : ''}
+        </div>
+        ${e.spieren.length ? `<div class="ex-muscles">${esc(e.spieren.join(', '))}</div>` : ''}
+        ${e.uitleg ? `<p>${esc(e.uitleg)}</p>` : ''}
+        <div class="ex-actions">
+          <button type="button" class="link" data-action="edit" data-ex="${esc(e.id)}">Bewerken</button>
+          ${own ? `<button type="button" class="link danger" data-action="del" data-ex="${esc(e.id)}">Verwijderen</button>` : ''}
+          ${e.edited ? `<button type="button" class="link" data-action="restore" data-ex="${esc(e.id)}">Origineel herstellen</button>` : ''}
+        </div>
+      </li>`;
+    }).join('') : '<li class="empty">Geen oefeningen gevonden.</li>';
+  }
+
+  [dbSearch, dbSoort, dbMat].forEach((el) => el.addEventListener('input', renderDb));
+
+  function openForm(ex) {
+    editingId = ex ? ex.id : null;
+    $('exFormTitle').textContent = !ex ? 'Nieuwe oefening'
+      : isOwn(ex.id) ? 'Oefening bewerken'
+      : 'Standaardoefening bewerken (je kunt het origineel altijd herstellen)';
+    exForm.hidden = false;
+    exForm.reset();
+    renderDbFilters();
+    const f = exForm.elements;
+    f.soort.value = ex ? ex.soort : (dbSoort.value || (S().cats[0] && S().cats[0].id) || '');
+    f.materiaal.value = ex ? ex.materiaal : 'geen';
+    f.vorm.value = ex ? ex.vorm : '';
+    if (ex) {
+      f.naam.value = ex.naam;
+      f.spieren.value = ex.spieren.join(', ');
+      f.uitleg.value = ex.uitleg;
+    }
+    exForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    f.naam.focus();
+  }
+  function closeForm() { exForm.hidden = true; editingId = null; }
+
+  $('newEx').addEventListener('click', () => {
+    if (!S().cats.length) { toast('Maak eerst een soort oefening aan'); return; }
+    openForm(null);
+  });
+  $('exCancel').addEventListener('click', closeForm);
+
+  exForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const f = exForm.elements;
+    const data = {
+      naam: f.naam.value.trim().slice(0, 60),
+      soort: f.soort.value,
+      materiaal: f.materiaal.value,
+      vorm: MODES[f.vorm.value] ? f.vorm.value : '',
+      spieren: f.spieren.value.split(',').map((s) => s.trim()).filter(Boolean),
+      uitleg: f.uitleg.value.trim()
+    };
+    if (!data.naam || !data.soort) return;
+    const dup = allEx().some((x) => x.id !== editingId && x.soort === data.soort && same(x.naam, data.naam));
+    if (dup) { toast('Er bestaat al een oefening met die naam in deze soort'); return; }
+    if (editingId && isOwn(editingId)) {
+      const ex = S().custom.find((x) => x.id === editingId);
+      if (ex) Object.assign(ex, data);
+      toast('Oefening opgeslagen');
+    } else if (editingId) {
+      // Standaardoefening: alleen de aanpassing bewaren, het origineel blijft in het database-bestand
+      const orig = D().builtin.find((b) => b.id === editingId);
+      const unchanged = orig && ['naam', 'soort', 'materiaal', 'vorm', 'uitleg'].every((k) => orig[k] === data[k])
+        && orig.spieren.join('|') === data.spieren.join('|');
+      if (unchanged) delete S().overrides[editingId];
+      else S().overrides[editingId] = data;
+      toast('Oefening aangepast');
+    } else {
+      addCustom(data);
+      toast(hasGear(data) ? 'Oefening toegevoegd aan de database' : `Toegevoegd. Vink "${matLabel(data.materiaal)}" aan bij materiaal om hem te gebruiken.`);
+    }
+    closeForm();
+    save();
+    renderDb();
+    renderCats();
+    renderSwitch();
+    renderSchema();
+  });
+
+  $('exGrid').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const s = S();
+    const id = btn.dataset.ex;
+    if (btn.dataset.action === 'edit') { const found = exById(id); if (found) openForm(found); return; }
+    if (btn.dataset.action === 'restore') {
+      const cur = exById(id);
+      if (!cur || !confirm(`De originele versie van "${cur.naam}" terugzetten? Je aanpassingen gaan verloren.`)) return;
+      delete s.overrides[id];
+      if (editingId === id) closeForm();
+      save();
+      renderDb();
+      renderCats();
+      renderSchema();
+      toast('Origineel hersteld');
+      return;
+    }
+    const ex = s.custom.find((x) => x.id === id);
+    if (!ex) return;
+    if (btn.dataset.action === 'del') {
+      if (!confirm(`"${ex.naam}" uit de database verwijderen?`)) return;
+      s.custom = s.custom.filter((x) => x !== ex);
+      Object.values(s.excluded).forEach((list) => { const i = list.indexOf(ex.id); if (i >= 0) list.splice(i, 1); });
+      if (editingId === ex.id) closeForm();
+      save();
+      renderDb();
+      renderCats();
+      renderSwitch();
+    }
+  });
+
+  // Exporteren: JSON-bestand dat anderen kunnen importeren (of dat je in het database-bestand plakt)
+  $('exportEx').addEventListener('click', () => {
+    const s = S();
+    const edited = Object.keys(s.overrides).map((id) => ({ ...s.overrides[id], origineel: id }));
+    if (!s.custom.length && !edited.length) { toast(`Je hebt nog geen eigen of aangepaste oefeningen in "${D().naam}"`); return; }
+    const rows = s.custom.concat(edited).map(({ naam, soort, materiaal, vorm, spieren, uitleg, origineel }) => {
+      const row = { naam, soort, materiaal };
+      if (vorm) row.vorm = vorm;
+      Object.assign(row, { spieren, uitleg });
+      if (origineel) row.origineel = origineel; // aangepaste standaardoefening
+      return row;
+    });
+    const soorten = s.cats.filter((c) => rows.some((r) => r.soort === c.id)).map((c) => ({ id: c.id, naam: c.name }));
+    const json = JSON.stringify({ type: 'trainingsschema-oefeningen', versie: 2, database: state.active, soorten, oefeningen: rows }, null, 2);
+    const url = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `mijn-oefeningen-${state.active}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(`${rows.length} oefening(en) geëxporteerd`);
+  });
+
+  $('importEx').addEventListener('click', () => $('importFile').click());
+  $('importFile').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    let data;
+    try { data = JSON.parse(await file.text()); } catch (err) { toast('Dit bestand kan niet gelezen worden'); return; }
+    const rows = Array.isArray(data) ? data : (data && Array.isArray(data.oefeningen) ? data.oefeningen : null);
+    if (!rows) { toast('Geen oefeningen gevonden in dit bestand'); return; }
+
+    // Het bestand zegt bij welke database het hoort; oude bestanden gaan naar de huidige
+    const target = data && DB_KEYS.includes(data.database) ? data.database : state.active;
+    if (target !== state.active) switchTo(target);
+    const s = S();
+
+    // Onbekende eigen soorten uit het bestand aanmaken
+    const soorten = data && Array.isArray(data.soorten) ? data.soorten : [];
+    const created = {};
+    const resolveSoort = (id) => {
+      if (typeof id !== 'string') return null;
+      if (created[id]) return created[id];
+      const byId = findCat(id);
+      if (byId) return byId.id;
+      const byName = s.cats.find((c) => same(c.name, id));
+      if (byName) return byName.id;
+      const def = soorten.find((x) => x && x.id === id && typeof x.naam === 'string');
+      if (!def) return null;
+      const existing = s.cats.find((c) => same(c.name, def.naam));
+      if (existing) return (created[id] = existing.id);
+      const cat = { id: 'c' + uid(), name: def.naam.slice(0, 40), color: s.cats.length % 8, mode: s === state.dbs.ijs ? 'rondes' : 'reps', count: 3, enabled: false, eigen: true };
+      s.cats.push(cat);
+      return (created[id] = cat.id);
+    };
+
+    let added = 0, changed = 0, skipped = 0;
+    rows.forEach((r) => {
+      const naam = r && typeof r.naam === 'string' ? r.naam.trim().slice(0, 60) : '';
+      const orig = r && typeof r.origineel === 'string' ? D().builtin.find((b) => b.id === r.origineel) : null;
+      const soort = (r ? resolveSoort(r.soort) : null) || (orig ? orig.soort : null);
+      if (!naam || !soort) { skipped++; return; }
+      const data = {
+        naam, soort,
+        materiaal: D().materiaal[r.materiaal] ? r.materiaal : 'geen',
+        vorm: MODES[r.vorm] ? r.vorm : '',
+        spieren: Array.isArray(r.spieren) ? r.spieren.filter((x) => typeof x === 'string').map((x) => x.slice(0, 40)).slice(0, 8) : [],
+        uitleg: typeof r.uitleg === 'string' ? r.uitleg.slice(0, 400) : ''
+      };
+      if (orig) { s.overrides[orig.id] = data; changed++; return; }
+      addCustom(data) ? added++ : skipped++;
+    });
+    save();
+    renderAll();
+    const parts = [`${added} oefening(en) toegevoegd`];
+    if (changed) parts.push(`${changed} aangepast`);
+    if (skipped) parts.push(`${skipped} overgeslagen (dubbel of onvolledig)`);
+    toast(`Import in "${D().naam}": ${parts.join(', ')}`);
+  });
+
+  function renderAll() {
+    renderSwitch();
+    renderCats();
+    renderOptions();
+    renderSchema();
+    renderDb();
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
