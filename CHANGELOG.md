@@ -3,6 +3,27 @@
 Alle belangrijke wijzigingen aan de website van IJsvereniging Groningen (YVG).
 Nieuwste wijzigingen staan bovenaan.
 
+## 2026-11-07 – Formulieren en inloggen
+
+### Toegevoegd
+- De 9 contactformulieren van yvg.nl op `contact.html`: vragen over schaatsen, lidmaatschap, overige vragen, inline-skaten, de financiële administratie en de website, en proeftraining aanvragen voor jeugd, recreanten en wedstrijdrijders. Uitklapbaar, met duidelijke foutmeldingen per veld.
+- `verstuur.php`: controleert de formulieren op de server en mailt ze naar de juiste persoon. Ontvangers en afzender staan in `php/config.php` (afgeschermd met `php/.htaccess`), met een testmodus om alles veilig te proberen.
+- Bescherming tegen spam: verborgen veld, minimale invultijd en maximaal 5 berichten per 10 minuten.
+- Knop **Inloggen** in het menu, direct naar Mijn YVG (AllUnited). Op middelgrote schermen alleen een icoon.
+- `js/formulieren.js`: controle in de browser, versturen zonder herladen en een formulier openen via een link (bijvoorbeeld `contact.html#proef-jeugd`).
+
+### Gewijzigd
+- Links "proeftraining aanvragen" op de pagina's Jeugd, Jeugdbeleid trainen, Recreanten, Trainingstijden en Lid worden gaan nu direct naar het juiste formulier.
+- Inlogstappen op `mijn-yvg.html` kloppen nu met het huidige inlogscherm van AllUnited, met uitleg bij "wachtwoord vergeten".
+- README: uitleg over de formulieren, inloggen en het online zetten.
+- `CONTROLEREN.md`: de ontvangers per formulier en de trainingstijden bij de proeftrainingen toegevoegd als controlepunten.
+- Contactpagina: de e-mailadressen per onderwerp zijn vervangen door de formulieren. Voor wedstrijden en het opzeggen of wijzigen van je lidmaatschap staan de e-mailadressen er nog.
+
+### Nog te doen voordat de site live gaat
+- Hosting met PHP 7.4 of nieuwer.
+- Ontvangers en afzender controleren in `php/config.php`.
+- Elk formulier één keer proberen met de testmodus aan (zie README).
+
 ## 2026-11-07 – Opmaak gelijk aan yvg.nl
 
 ### Toegevoegd

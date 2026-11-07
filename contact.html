@@ -21,83 +21,271 @@
       <div class="container">
         <nav class="crumbs" data-crumbs></nav>
         <h1>Contact</h1>
-        <p>YVG staat voor je klaar! Kies je onderwerp en je mail komt direct bij de juiste persoon terecht.</p>
+        <p>YVG staat voor je klaar! Kies je onderwerp en je bericht komt direct bij de juiste persoon terecht.</p>
       </div>
     </section>
 
     <div class="container content-layout">
       <article class="prose">
         <p class="lead">YVG is een leuke en gezellige vereniging met veel leden, en dus ook veel vragen om te beantwoorden. We proberen alle e-mails binnen drie dagen te beantwoorden.</p>
-        <p>Kies hieronder het onderwerp van je vraag. Zo komt je e-mail direct bij de juiste persoon terecht.</p>
-        <!-- CONTROLEREN: op yvg.nl stonden hier contactformulieren (één per onderwerp) die de mail doorstuurden naar een vast adres. Een statische site kan geen formulieren versturen, daarom staan hier e-mailadressen. De adressen hieronder komen van andere pagina's van yvg.nl; controleer per onderwerp of het adres klopt met waar het formulier naartoe stuurde. -->
+        <p>Klik hieronder op het onderwerp van je vraag en vul het formulier in. Zo komt je bericht direct bij de juiste persoon terecht.</p>
+        <!-- De formulieren worden verstuurd door verstuur.php. Naar welk e-mailadres elk formulier gaat, staat in php/config.php. -->
 
+        <!-- ===================== Vragen en opmerkingen ===================== -->
         <h2>Vragen en opmerkingen</h2>
-        <div class="card-grid">
-          <a class="card" href="mailto:afdeling_schaatsen@yvg.nl">
-            <h3>Schaatsen bij YVG</h3>
-            <p>Vragen over schaatsen en trainingen bij YVG.</p>
-            <span class="card-link">afdeling_schaatsen@yvg.nl</span>
-          </a>
-          <a class="card" href="mailto:ledenadministratie@yvg.nl">
-            <h3>Lidmaatschap</h3>
-            <p>Vragen over je lidmaatschap, je gegevens of opzeggen.</p>
-            <span class="card-link">ledenadministratie@yvg.nl</span>
-          </a>
-          <a class="card" href="mailto:wedstrijden@yvg.nl">
-            <h3>Wedstrijden</h3>
-            <p>Vragen over wedstrijden, of helpen als vrijwilliger, bijvoorbeeld als jurylid.</p>
-            <span class="card-link">wedstrijden@yvg.nl</span>
-          </a>
-          <!-- CONTROLEREN: voor 'Overige vragen/opmerkingen' staat nergens op yvg.nl een e-mailadres. Vul hier het adres in waar dit formulier naartoe stuurde. -->
-          <div class="card">
-            <h3>Overige vragen en opmerkingen</h3>
-            <p>Past je vraag niet bij een van de onderwerpen op deze pagina? Kies dan het onderwerp dat er het dichtst bij ligt.</p>
-          </div>
+        <div class="faq form-list">
+
+          <details id="vraag-schaatsen">
+            <summary>Vragen over schaatsen bij YVG</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-schaatsen">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag over schaatsen bij YVG.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vs-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vs-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vs-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vs-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vs-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vs-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vs-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vs-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vs-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vs-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vs-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vs-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
+
+          <details id="vraag-lidmaatschap">
+            <summary>Vragen over lidmaatschap</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-lidmaatschap">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag over het lidmaatschap bij YVG.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vl-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vl-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vl-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vl-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vl-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vl-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vl-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vl-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vl-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vl-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vl-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vl-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
+
+          <details id="vraag-overig">
+            <summary>Overige vragen en opmerkingen</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-overig">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag of opmerking en zoek contact met YVG. Ook als je graag wilt helpen als vrijwilliger.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vo-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vo-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vo-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vo-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vo-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vo-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vo-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vo-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vo-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vo-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vo-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vo-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
         </div>
 
-        <h2>Proeftraining aanvragen</h2>
-        <p>Vermeld in je mail je naam, geboortedatum, adres, telefoonnummer en wanneer je graag zou willen meetrainen. Daarna nemen we contact met je op. Lees ook wat je over proeftrainen moet weten op de pagina <a href="lid-worden.html">Lid worden</a>.</p>
-        <!-- CONTROLEREN: op yvg.nl stond voor de proeftrainingen geen e-mailadres, alleen formulieren. Proefleden worden volgens de site aangemeld door de trainerscoördinatoren (Afdeling Schaatsen); voor de jeugd is jeugdcommissie@yvg.nl gekozen. Controleer of deze adressen kloppen. -->
-        <div class="card-grid">
-          <a class="card" href="mailto:info@yvg.nl?subject=Aanvraag%20proeftraining%20jeugd">
-            <h3>Proeftraining jeugd</h3>
-            <p>Voor kinderen van 14 jaar en jonger.</p>
-            <span class="card-link">info@yvg.nl</span>
-          </a>
-          <a class="card" href="mailto:info@yvg.nl?subject=Aanvraag%20proeftraining%20recreant">
-            <h3>Proeftraining recreant</h3>
-            <p>Voor recreanten van 15 jaar en ouder.</p>
-            <span class="card-link">info@yvg.nl</span>
-          </a>
-          <a class="card" href="mailto:info@yvg.nl?subject=Aanvraag%20proeftraining%20wedstrijdrijder">
-            <h3>Proeftraining wedstrijdrijder</h3>
-            <p>Voor wedstrijdrijders van 15 jaar en ouder.</p>
-            <span class="card-link">info@yvg.nl</span>
-          </a>
+        <!-- ===================== Proeftraining aanvragen ===================== -->
+        <h2 id="proeftraining">Proeftraining aanvragen</h2>
+        <p>Wil je eerst eens meetrainen? Vraag hier een proeftraining aan. Daarna nemen we contact met je op. Lees ook wat je over proeftrainen moet weten op de pagina <a href="lid-worden.html">Lid worden</a>.</p>
+        <!-- CONTROLEREN: de keuzes voor de proeftrainingen komen van de formulieren op yvg.nl, met de tijden van trainingstijden.html. Pas ze aan als de trainingstijden veranderen. -->
+        <div class="faq form-list">
+
+          <details id="proef-jeugd">
+            <summary>Proeftraining jeugd (14 jaar en jonger)</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="proef-jeugd">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik vraag een proeftraining aan voor jeugd van 14 jaar en jonger.</p>
+              <div class="form-grid">
+                <div class="field"><label for="pj-naam">Naam van je kind <span class="req" aria-hidden="true">*</span></label><input id="pj-naam" name="naam" type="text" maxlength="150" required></div>
+                <div class="field"><label for="pj-geboortedatum">Geboortedatum van je kind <span class="req" aria-hidden="true">*</span></label><input id="pj-geboortedatum" name="geboortedatum" type="date" min="1900-01-01" required></div>
+                <div class="field full"><label for="pj-adres">Straat en huisnummer <span class="req" aria-hidden="true">*</span></label><input id="pj-adres" name="adres" type="text" autocomplete="street-address" maxlength="150" required></div>
+                <div class="field"><label for="pj-postcode">Postcode <span class="req" aria-hidden="true">*</span></label><input id="pj-postcode" name="postcode" type="text" autocomplete="postal-code" maxlength="10" pattern="[0-9A-Za-z][0-9A-Za-z \-]{2,9}" data-fout="Vul een geldige postcode in, bijvoorbeeld 9736 AB." required></div>
+                <div class="field"><label for="pj-woonplaats">Woonplaats <span class="req" aria-hidden="true">*</span></label><input id="pj-woonplaats" name="woonplaats" type="text" autocomplete="address-level2" maxlength="100" required></div>
+                <div class="field"><label for="pj-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="pj-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="pj-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="pj-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <fieldset class="field full">
+                  <legend>Wanneer wil je kind proeftrainen? <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="moment" value="1 keer per week recreatief: vrijdag 17.00 – 18.15 uur" required> 1 keer per week recreatief: vrijdag 17.00 – 18.15 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="1 keer per week: woensdagmiddag" required> 1 keer per week: woensdagmiddag (de tijd hangt af van de leeftijd)</label>
+                    <label class="choice"><input type="radio" name="moment" value="1 keer per week: zaterdag 10.00 – 11.15 uur" required> 1 keer per week: zaterdag 10.00 – 11.15 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="2 keer per week: woensdagmiddag en zaterdag 10.00 – 11.15 uur" required> 2 keer per week: woensdagmiddag en zaterdag 10.00 – 11.15 uur</label>
+                  </div>
+                </fieldset>
+                <div class="field full"><label for="pj-opmerkingen">Aanvullingen of opmerkingen</label><textarea id="pj-opmerkingen" name="opmerkingen" rows="4" maxlength="4000"></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken deze gegevens alleen om de proeftraining te regelen (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+            <div class="callout">
+              <strong>Goed om te weten</strong>
+              <p>Komt je kind op vrijdag recreatief proeftrainen? Dan traint je kind mee in het trimuur. Je koopt dan zelf een trimkaart aan de balie van Kardinge.</p>
+              <p>Voor de andere trainingen kan je kind 5 keer proeftrainen. De trainingen zijn gratis. Voor de toegang tot de baan koop je via YVG een proefkaart van € 30, die wij aanvragen bij de schaatsbond KNSB.</p>
+            </div>
+          </details>
+
+          <details id="proef-recreant">
+            <summary>Proeftraining recreant (15 jaar en ouder)</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="proef-recreant">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik vraag een proeftraining aan als recreant van 15 jaar of ouder.</p>
+              <div class="form-grid">
+                <div class="field"><label for="pr-naam">Naam <span class="req" aria-hidden="true">*</span></label><input id="pr-naam" name="naam" type="text" autocomplete="name" maxlength="150" required></div>
+                <div class="field"><label for="pr-geboortedatum">Geboortedatum <span class="req" aria-hidden="true">*</span></label><input id="pr-geboortedatum" name="geboortedatum" type="date" autocomplete="bday" min="1900-01-01" required></div>
+                <div class="field"><label for="pr-woonplaats">Woonplaats <span class="req" aria-hidden="true">*</span></label><input id="pr-woonplaats" name="woonplaats" type="text" autocomplete="address-level2" maxlength="100" required></div>
+                <div class="field"><label for="pr-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="pr-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field full"><label for="pr-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="pr-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <fieldset class="field full">
+                  <legend>Wanneer wil je proeftrainen? <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="moment" value="Dinsdagochtend 9.30 – 11.00 uur" required> Dinsdagochtend 9.30 – 11.00 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Dinsdagavond 19.00 – 20.15 uur" required> Dinsdagavond 19.00 – 20.15 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Donderdagochtend 9.30 – 11.00 uur" required> Donderdagochtend 9.30 – 11.00 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Donderdagavond 19.00 – 20.15 uur" required> Donderdagavond 19.00 – 20.15 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Vrijdag 17.00 – 18.15 uur" required> Vrijdag 17.00 – 18.15 uur</label>
+                  </div>
+                </fieldset>
+                <div class="field full"><label for="pr-opmerkingen">Aanvullingen of opmerkingen</label><textarea id="pr-opmerkingen" name="opmerkingen" rows="4" maxlength="4000"></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken deze gegevens alleen om de proeftraining te regelen (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
+
+          <details id="proef-wedstrijd">
+            <summary>Proeftraining wedstrijdrijder (15 jaar en ouder)</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="proef-wedstrijd">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik vraag een proeftraining aan als wedstrijdrijder van 15 jaar of ouder.</p>
+              <div class="form-grid">
+                <div class="field"><label for="pw-naam">Naam <span class="req" aria-hidden="true">*</span></label><input id="pw-naam" name="naam" type="text" autocomplete="name" maxlength="150" required></div>
+                <div class="field"><label for="pw-geboortedatum">Geboortedatum <span class="req" aria-hidden="true">*</span></label><input id="pw-geboortedatum" name="geboortedatum" type="date" autocomplete="bday" min="1900-01-01" required></div>
+                <div class="field full"><label for="pw-adres">Straat en huisnummer <span class="req" aria-hidden="true">*</span></label><input id="pw-adres" name="adres" type="text" autocomplete="street-address" maxlength="150" required></div>
+                <div class="field"><label for="pw-postcode">Postcode <span class="req" aria-hidden="true">*</span></label><input id="pw-postcode" name="postcode" type="text" autocomplete="postal-code" maxlength="10" pattern="[0-9A-Za-z][0-9A-Za-z \-]{2,9}" data-fout="Vul een geldige postcode in, bijvoorbeeld 9736 AB." required></div>
+                <div class="field"><label for="pw-woonplaats">Woonplaats <span class="req" aria-hidden="true">*</span></label><input id="pw-woonplaats" name="woonplaats" type="text" autocomplete="address-level2" maxlength="100" required></div>
+                <div class="field"><label for="pw-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="pw-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="pw-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="pw-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <fieldset class="field full">
+                  <legend>Welke proeftraining wil je? <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="soort" value="Langebaan" required> Langebaan</label>
+                    <label class="choice"><input type="radio" name="soort" value="Marathon" required> Marathon</label>
+                  </div>
+                </fieldset>
+                <fieldset class="field full">
+                  <legend>Wanneer wil je proeftrainen? <span class="req" aria-hidden="true">*</span></legend>
+                  <div class="choices">
+                    <label class="choice"><input type="radio" name="moment" value="Maandag 18.30 – 19.45 uur" required> Maandag 18.30 – 19.45 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Vrijdag 18.30 – 19.45 uur" required> Vrijdag 18.30 – 19.45 uur</label>
+                    <label class="choice"><input type="radio" name="moment" value="Maandag en vrijdag 18.30 – 19.45 uur" required> Maandag en vrijdag 18.30 – 19.45 uur</label>
+                  </div>
+                </fieldset>
+                <div class="field full"><label for="pw-opmerkingen">Aanvullingen of opmerkingen</label><textarea id="pw-opmerkingen" name="opmerkingen" rows="4" maxlength="4000"></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken deze gegevens alleen om de proeftraining te regelen (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
         </div>
 
+        <!-- ===================== Inline-skaten ===================== -->
         <h2>Inline-skaten en zomertraining</h2>
-        <div class="card-grid">
-          <a class="card" href="mailto:zomertraining@yvg.nl">
-            <h3>Inline-skaten bij YVG</h3>
-            <p>Vragen over inline-skaten en de andere zomertrainingen, of aanmelden om een keer mee te doen.</p>
-            <span class="card-link">zomertraining@yvg.nl</span>
-          </a>
+        <div class="faq form-list">
+          <details id="vraag-inline">
+            <summary>Vragen over inline-skaten bij YVG</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-inline">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag over inline-skaten of de andere zomertrainingen bij YVG, of ik wil een keer meedoen.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vi-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vi-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vi-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vi-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vi-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vi-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vi-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vi-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vi-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vi-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vi-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vi-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
         </div>
 
+        <!-- ===================== Vragen aan de organisatie ===================== -->
         <h2>Vragen aan de organisatie</h2>
-        <!-- CONTROLEREN: voor de financiële administratie is penningmeester@yvg.nl gebruikt (de penningmeester staat op de bestuurspagina bij 'Financiën'); voor de website communicatie@yvg.nl (de afdeling Communicatie beheert de website). Controleer of dit de juiste adressen zijn. -->
-        <div class="card-grid">
-          <a class="card" href="mailto:penningmeester@yvg.nl">
-            <h3>Financiële administratie</h3>
-            <p>Vragen over betalingen, facturen en andere financiële zaken.</p>
-            <span class="card-link">penningmeester@yvg.nl</span>
-          </a>
-          <a class="card" href="mailto:communicatie@yvg.nl">
-            <h3>Website en communicatie</h3>
-            <p>Vragen of opmerkingen over de website, of een bijdrage voor de website, nieuwsbrief of social media.</p>
-            <span class="card-link">communicatie@yvg.nl</span>
-          </a>
+        <div class="faq form-list">
+          <details id="vraag-financieel">
+            <summary>Contact financiële administratie</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-financieel">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag aan de financiële administratie van YVG, bijvoorbeeld over betalingen of facturen.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vf-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vf-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vf-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vf-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vf-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vf-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vf-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vf-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vf-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vf-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vf-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vf-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
+
+          <details id="vraag-website">
+            <summary>Vragen over de website van YVG</summary>
+            <form class="yvg-form" action="verstuur.php" method="post">
+              <input type="hidden" name="formulier" value="vraag-website">
+              <input type="hidden" name="invultijd" value="">
+              <div class="hp" aria-hidden="true"><label>Laat dit veld leeg <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+              <p class="form-intro">Ik heb een vraag of opmerking over de website, of een bijdrage voor de website, nieuwsbrief of social media.</p>
+              <div class="form-grid">
+                <div class="field"><label for="vw-voornaam">Voornaam <span class="req" aria-hidden="true">*</span></label><input id="vw-voornaam" name="voornaam" type="text" autocomplete="given-name" maxlength="100" required></div>
+                <div class="field"><label for="vw-achternaam">Achternaam <span class="req" aria-hidden="true">*</span></label><input id="vw-achternaam" name="achternaam" type="text" autocomplete="family-name" maxlength="100" required></div>
+                <div class="field"><label for="vw-telefoon">Telefoonnummer <span class="req" aria-hidden="true">*</span></label><input id="vw-telefoon" name="telefoon" type="tel" autocomplete="tel" maxlength="20" pattern="\+?[0-9 \(\)\-]{6,20}" required></div>
+                <div class="field"><label for="vw-email">E-mailadres <span class="req" aria-hidden="true">*</span></label><input id="vw-email" name="email" type="email" autocomplete="email" maxlength="200" required></div>
+                <div class="field full"><label for="vw-onderwerp">Onderwerp <span class="req" aria-hidden="true">*</span></label><input id="vw-onderwerp" name="onderwerp" type="text" maxlength="200" required></div>
+                <div class="field full"><label for="vw-bericht">Je bericht <span class="req" aria-hidden="true">*</span></label><textarea id="vw-bericht" name="bericht" rows="6" maxlength="4000" required></textarea></div>
+              </div>
+              <p class="form-note">Velden met <span class="req">*</span> zijn verplicht. We gebruiken je gegevens alleen om je vraag te beantwoorden (zie onze <a href="statuten.html">privacyverklaring</a>).</p>
+              <div class="form-actions"><button class="button" type="submit">Verzenden</button></div>
+              <p class="form-status" role="alert"></p>
+            </form>
+          </details>
+        </div>
+
+        <div class="callout">
+          <strong>Liever direct mailen?</strong>
+          <p>Vragen over wedstrijden, of wil je helpen als jurylid? Mail naar <a href="mailto:wedstrijden@yvg.nl">wedstrijden@yvg.nl</a>. Je lidmaatschap opzeggen of wijzigen doe je via <a href="mailto:ledenadministratie@yvg.nl">ledenadministratie@yvg.nl</a>.</p>
         </div>
       </article>
 
@@ -118,5 +306,6 @@
   </main>
 
   <script src="js/layout.js" data-part="footer"></script>
+  <script src="js/formulieren.js"></script>
 </body>
 </html>

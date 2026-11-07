@@ -147,6 +147,13 @@ a { color: var(--color-primary); }
 .nav-list > li > a[aria-current="page"], .sub-toggle.is-active { box-shadow: inset 0 -3px 0 #fff; }
 .nav-list .nav-cta a { font-weight: 700; text-transform: uppercase; letter-spacing: .02em; }
 .nav-cta svg { width: 16px; height: 16px; }
+/* Inloggen (Mijn YVG bij AllUnited) */
+.nav-login svg { width: 18px; height: 18px; flex: none; }
+@media (min-width: 1101px) and (max-width: 1299px) {
+  /* weinig ruimte: alleen het icoon tonen, de tekst blijft voor schermlezers */
+  .nav-login .nav-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nav-list > li.nav-login > a { padding-left: 14px; padding-right: 14px; }
+}
 .caret { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); opacity: .8; transition: transform .15s; }
 .sub-toggle[aria-expanded="true"] .caret { transform: translateY(1px) rotate(225deg); }
 
@@ -211,7 +218,7 @@ a { color: var(--color-primary); }
   .nav-list > li + li { border-left: 0; border-top: 1px solid rgba(255,255,255,.12); }
   .nav-list > li > a, .sub-toggle { width: 100%; padding: 13px 8px; justify-content: space-between; font-size: 1.05rem; }
   .nav-list > li > a[aria-current="page"], .sub-toggle.is-active { box-shadow: none; font-weight: 700; }
-  .nav-list .nav-cta a { justify-content: flex-start; }
+  .nav-list .nav-cta a, .nav-list .nav-login a { justify-content: flex-start; }
   .sub-menu { position: static; min-width: 0; margin: 0 0 8px; padding: 4px 0; background: rgba(0,0,0,.18); border: 0; box-shadow: none; }
   .sub-menu a { color: #fff; padding: 10px 16px; }
   .sub-menu a:hover, .sub-menu a[aria-current="page"] { background: rgba(255,255,255,.12); color: #fff; }
@@ -482,6 +489,45 @@ a.card .card-link { color: var(--green); }
 .faq details[open] summary::before { content: "–"; }
 .faq summary:hover { color: var(--green); }
 .faq details > :not(summary) { margin: 0 0 14px 40px; }
+
+/* Formulieren (contactpagina): uitklapbaar zoals de veelgestelde vragen */
+.form-list details { scroll-margin-top: 110px; }
+.form-list details > :not(summary) { margin: 0 0 24px; }
+.form-list summary { font-size: 1.12rem; }
+.form-intro { margin: 0 0 16px; font-weight: 600; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+.form-grid .full { grid-column: 1 / -1; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: minmax(0, 1fr); } }
+.field { display: grid; gap: 6px; align-content: start; min-width: 0; }
+fieldset.field { margin: 0; padding: 0; border: 0; }
+.field label, .field legend { padding: 0; font-weight: 600; font-size: .96rem; line-height: 1.4; color: var(--color-text); }
+.field legend { margin-bottom: 6px; }
+.req { color: var(--color-danger); }
+.field input:not([type="radio"]):not([type="checkbox"]), .field textarea, .field select {
+  width: 100%; padding: 10px 12px;
+  border: 1px solid #c4c8cc; border-radius: var(--radius);
+  background: #fff; color: var(--color-text);
+  font: inherit; line-height: 1.4;
+}
+.field textarea { min-height: 120px; resize: vertical; }
+.field input:focus, .field textarea:focus, .field select:focus { border-color: var(--green); outline: 2px solid var(--green); outline-offset: 0; }
+.field [aria-invalid="true"], fieldset.field[aria-invalid="true"] .choices { border-color: var(--color-danger); }
+.choices { display: grid; gap: 8px; }
+.choice { display: flex; gap: 10px; align-items: flex-start; font-weight: 400 !important; cursor: pointer; }
+.choice input { flex: none; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--green); }
+.field-error { margin: 0 !important; color: var(--color-danger); font-size: .92rem; font-weight: 600; }
+.form-note { margin: 18px 0 !important; color: var(--color-muted); font-size: .92rem; }
+.form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.form-actions .button:disabled { opacity: .65; cursor: wait; }
+.form-status { margin: 14px 0 0 !important; padding: 12px 14px; border-left: 4px solid var(--color-danger); background: #fdecea; color: #7a1f16; }
+.form-status:empty { display: none; }
+.form-success { padding: 18px 20px; border-left: 4px solid var(--green); background: var(--green-soft); }
+.form-success:focus { outline: none; }
+.form-success h3 { margin: 0 0 6px; color: var(--green); }
+.form-success p { margin: 0 0 10px; }
+.link-button { padding: 0; border: 0; background: none; color: var(--green); font: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* Verborgen veld tegen spam: onzichtbaar voor bezoekers, wel voor spamrobots */
+.hp { position: absolute !important; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 
 /* Zijbalk */
 .sidebar { display: grid; gap: 20px; position: sticky; top: 110px; }

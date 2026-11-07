@@ -48,6 +48,9 @@
     { label: "Contact", href: "contact.html" }
   ];
   const CTA = { label: "Word lid", href: "lid-worden.html" };
+  // Inloggen gaat naar Mijn YVG in de ledenadministratie (AllUnited), net als op yvg.nl.
+  // Uitleg over de eerste keer inloggen staat op mijn-yvg.html.
+  const LOGIN = { label: "Inloggen", href: "https://pr01.allunited.nl/index.php?section=YVG", title: "Inloggen op Mijn YVG" };
 
   // De drie nieuwste berichten (blok onderaan elke pagina). Houd gelijk met nieuws.html.
   const NEWS = [
@@ -57,6 +60,7 @@
   ];
 
   const ICON = {
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
     thumb: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11H3V10h4zM7 10l4-8a3 3 0 0 1 3 3v4h5.5a2 2 0 0 1 2 2.3l-1.4 8A2 2 0 0 1 18.1 21H7"/></svg>',
     facebook: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 8.5V6.6c0-.9.6-1.1 1-1.1h2.6V1.6L14 1.5c-4 0-4.9 3-4.9 4.9v2.1H6.8v4h2.3V22.5H14V12.5h3.3l.4-4H14z"/></svg>',
     instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>'
@@ -89,7 +93,7 @@
         <span class="nav-toggle-bars" aria-hidden="true"></span> Menu
       </button>
       <nav class="site-nav" id="site-nav" aria-label="Hoofdmenu">
-        <ul class="nav-list">${items}<li class="nav-cta">${link(CTA, ICON.thumb + esc(CTA.label))}</li></ul>
+        <ul class="nav-list">${items}<li class="nav-login"><a href="${LOGIN.href}" title="${esc(LOGIN.title)}">${ICON.user}<span class="nav-label">${esc(LOGIN.label)}</span></a></li><li class="nav-cta">${link(CTA, ICON.thumb + esc(CTA.label))}</li></ul>
       </nav>
     </div>
   </header>`;
