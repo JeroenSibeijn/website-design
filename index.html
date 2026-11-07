@@ -13,182 +13,100 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;600;700&family=Ubuntu:wght@500;700&display=swap">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body data-no-news>
   <script src="js/layout.js" data-part="header"></script>
 
   <main id="main">
-    <section id="home" class="hero">
-      <div class="container">
-        <div class="hero-content">
-          <span class="eyebrow">Sinds 1862 · Kardinge Groningen</span>
-          <h1>Plezier op ijs en asfalt</h1>
-          <p>Schaatsen voor jeugd, recreanten en wedstrijdrijders. In de zomer trainen we door met inline-skaten, fietsen en droogtraining.</p>
-          <div class="hero-actions">
-            <a href="lid-worden.html" class="button button--light">Word lid</a>
-            <a href="trainingstijden.html" class="button button--ghost">Bekijk de trainingstijden</a>
-          </div>
-        </div>
+    <h1 class="visually-hidden">IJsvereniging Groningen – Plezier op ijs en asfalt</h1>
+
+    <section class="section" aria-label="Schaatsen bij YVG">
+      <div class="container tiles">
+        <a class="tile tile--jeugd" href="jeugd.html">
+          <span class="tile-label">Schaatsen voor de jeugd</span>
+          <h2>Plezier op het ijs</h2>
+        </a>
+        <a class="tile tile--wedstrijd" href="wedstrijd-schaatsen.html">
+          <span class="tile-label">Wedstrijd &amp; marathon schaatsen</span>
+          <h2>Een prachtige sport</h2>
+        </a>
+        <a class="tile tile--recreatief" href="recreanten.html">
+          <span class="tile-label">Recreatief schaatsen</span>
+          <h2>Beginners en gevorderden</h2>
+        </a>
       </div>
     </section>
 
-    <section id="schaatsen" class="section">
+    <section class="section section--flush" aria-labelledby="nieuws-titel">
       <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Schaatsen bij YVG</span>
-          <h2>Voor elk niveau een plek op het ijs</h2>
-          <p>Van je eerste slag tot de marathon: kies wat bij je past.</p>
-        </div>
-        <div class="tiles">
-          <a class="tile tile--jeugd" href="jeugd.html">
-            <span class="tile-label">Jeugd</span>
-            <h3>Plezier op het ijs</h3>
-            <p>Leren schaatsen in groepen op leeftijd en niveau.</p>
-            <span class="tile-arrow">Meer over jeugdschaatsen →</span>
-          </a>
-          <a class="tile tile--wedstrijd" href="wedstrijd-schaatsen.html">
-            <span class="tile-label">Wedstrijd &amp; marathon</span>
-            <h3>Een prachtige sport</h3>
-            <p>Gerichte trainingen voor langebaan en marathon.</p>
-            <span class="tile-arrow">Meer over wedstrijdschaatsen →</span>
-          </a>
-          <a class="tile tile--recreatief" href="recreanten.html">
-            <span class="tile-label">Recreatief</span>
-            <h3>Beginners en gevorderden</h3>
-            <p>Lekker schaatsen en je techniek verbeteren.</p>
-            <span class="tile-arrow">Meer over recreatief schaatsen →</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <section id="nieuws" class="section section-alt">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Nieuws</span>
-          <h2>Meest recent nieuws</h2>
-        </div>
+        <h2 id="nieuws-titel">Meest recent nieuws</h2>
         <!-- Houd dit gelijk met de bovenste berichten op nieuws.html -->
-        <ul class="news-list">
-          <li class="news-item">
-            <img src="https://www.yvg.nl/wp-content/uploads/2026/10/slijpworkshop-382x255.jpg" alt="" width="382" height="255" loading="lazy">
-            <div class="news-body">
-              <span class="news-meta">24 oktober 2026</span>
-              <h3><a href="https://www.yvg.nl/2026/10/workshop-slijpen-8-november-2026/">Workshop slijpen 8 november 2026</a></h3>
-            </div>
-          </li>
-          <li class="news-item">
-            <img src="https://www.yvg.nl/wp-content/uploads/2026/10/IMG_0918-1-382x255.jpg" alt="" width="382" height="255" loading="lazy">
-            <div class="news-body">
-              <span class="news-meta">24 oktober 2026</span>
-              <h3><a href="https://www.yvg.nl/2026/10/yvg-opent-schaatsseizoen-met-vierde-plaats-bij-nk-clubs-in-thialf/">YVG opent schaatsseizoen met vierde plaats bij NK Clubs in Thialf</a></h3>
-            </div>
-          </li>
-          <li class="news-item">
-            <img src="https://www.yvg.nl/wp-content/uploads/2024/07/Clubkampioenschap_skeeleren3-382x255.jpg" alt="" width="382" height="255" loading="lazy">
-            <div class="news-body">
-              <span class="news-meta">31 augustus 2026</span>
-              <h3><a href="https://www.yvg.nl/2026/08/geen-skeeleren-op-20-en-27-april/">Geen skeelertraining op 31 augustus vanwege regen</a></h3>
-            </div>
-          </li>
-          <li class="news-item">
-            <img src="https://www.yvg.nl/wp-content/uploads/2026/07/DSC_7672-382x255.jpg" alt="" width="382" height="255" loading="lazy">
-            <div class="news-body">
-              <span class="news-meta">5 juli 2026</span>
-              <h3><a href="https://www.yvg.nl/2026/07/yvg-clubkampioenschap-skeeleren-2026/">YVG-clubkampioenschap skeeleren 2026</a></h3>
-            </div>
-          </li>
-        </ul>
-        <p class="section-more"><a href="nieuws.html" class="button">Bekijk al het nieuws</a></p>
-      </div>
-    </section>
-
-    <section id="trainingsschema" class="section">
-      <div class="container feature">
-        <div>
-          <span class="eyebrow">Voor trainers en schaatsers</span>
-          <h2>Maak in een paar klikken een trainingsschema</h2>
-          <p>Kies of je op het ijs of ernaast traint, zet de onderdelen in je eigen volgorde en de generator maakt een schema van maximaal anderhalf uur.</p>
-          <ul class="checks">
-            <li>Oefeningen voor op het ijs en voor droogtraining</li>
-            <li>Rekent met de rondetijd van je groep</li>
-            <li>Kopiëren, printen of zelf oefeningen toevoegen</li>
+        <div class="news-home">
+          <article class="news-feature">
+            <a href="https://www.yvg.nl/2026/10/workshop-slijpen-8-november-2026/"><img src="https://www.yvg.nl/wp-content/uploads/2026/10/slijpworkshop.jpg" alt="Flyer slijpworkshop: gratis voor YVG-leden, ouders ook welkom, zondag 8 november, 15.30 – 16.30 uur, bovenzaal Kardinge." width="1080" height="1080" loading="lazy"></a>
+            <h3><a href="https://www.yvg.nl/2026/10/workshop-slijpen-8-november-2026/">Workshop slijpen 8 november 2026</a></h3>
+            <span class="date">24/10/2026</span>
+            <p>Dit jaar organiseren we weer een slijpworkshop onder leiding van Gert Beenes Schaatsservice uit Bedum. De workshop is op zondag 8 november en begint om 15.30 uur, voor het YVG-uur. Let op: dit is een week later dan eerder aangekondigd. De workshop is voor alle YVG-leden; ouders zijn ook welkom. Neem je slijptafel en natuurlijk je schaatsen mee. Aanmelden kan via <a href="mailto:jeugdcommissie@yvg.nl">jeugdcommissie@yvg.nl</a>.</p>
+            <a href="nieuws.html" class="button">Bekijk alle berichten</a>
+          </article>
+          <ul class="news-rows">
+            <li class="news-row">
+              <img src="https://www.yvg.nl/wp-content/uploads/2026/10/IMG_0918-1-382x255.jpg" alt="" width="382" height="255" loading="lazy">
+              <div>
+                <h3><a href="https://www.yvg.nl/2026/10/yvg-opent-schaatsseizoen-met-vierde-plaats-bij-nk-clubs-in-thialf/">YVG opent schaatsseizoen met vierde plaats bij NK Clubs in Thialf</a></h3>
+                <span class="date">24/10/2026</span>
+              </div>
+            </li>
+            <li class="news-row">
+              <img src="https://www.yvg.nl/wp-content/uploads/2024/07/Clubkampioenschap_skeeleren3-382x255.jpg" alt="" width="382" height="255" loading="lazy">
+              <div>
+                <h3><a href="https://www.yvg.nl/2026/08/geen-skeeleren-op-20-en-27-april/">Geen skeelertraining op 31 augustus vanwege regen</a></h3>
+                <span class="date">31/08/2026</span>
+              </div>
+            </li>
+            <li class="news-row">
+              <img src="https://www.yvg.nl/wp-content/uploads/2026/07/DSC_7672-382x255.jpg" alt="" width="382" height="255" loading="lazy">
+              <div>
+                <h3><a href="https://www.yvg.nl/2026/07/yvg-clubkampioenschap-skeeleren-2026/">YVG-clubkampioenschap skeeleren 2026</a></h3>
+                <span class="date">05/07/2026</span>
+              </div>
+            </li>
           </ul>
-          <a href="trainingsschema.html" class="button">Naar de generator</a>
-        </div>
-        <div class="mock" aria-hidden="true">
-          <div class="mock-pills"><span>Op het ijs</span><span>Gemiddeld</span><span>± 75 min</span></div>
-          <div class="mock-block" style="--mc: #347631">
-            <div class="mock-head"><b>1</b> Warming-up</div>
-            <div class="mock-row"><span>Rustig inschaatsen</span><span>10 min</span></div>
-          </div>
-          <div class="mock-block" style="--mc: #2f6fe0">
-            <div class="mock-head"><b>2</b> Techniek</div>
-            <div class="mock-row"><span>Bochtenwerk links</span><span>3 × 2 rondes</span></div>
-            <div class="mock-row"><span>Afzet op één been</span><span>3 × 1 ronde</span></div>
-          </div>
-          <div class="mock-block" style="--mc: #e0522c">
-            <div class="mock-head"><b>3</b> Snelheid</div>
-            <div class="mock-row"><span>Starts</span><span>4 × 100 m</span></div>
-          </div>
         </div>
       </div>
     </section>
 
-    <section class="section section-alt">
-      <div class="container">
-        <div class="section-head">
-          <h2>Snel naar</h2>
-        </div>
-        <div class="quick">
-          <a href="trainingstijden.html">
-            <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
-            <h3>Trainingstijden</h3>
-            <p>Wanneer en waar trainen de groepen?</p>
-          </a>
-          <a href="kalender.html">
-            <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-            <h3>Kalender</h3>
-            <p>Komende activiteiten, wedstrijden en trainingen.</p>
-          </a>
-          <a href="lid-worden.html">
-            <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></span>
-            <h3>Lid worden</h3>
-            <p>Proeftraining gehad? Schrijf je in.</p>
-          </a>
-          <a href="contact.html">
-            <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
-            <h3>Contact</h3>
-            <p>Vragen? Neem contact met ons op.</p>
-          </a>
-        </div>
+    <section class="section section--flush" aria-label="Snel naar">
+      <div class="container quick">
+        <a href="veelgestelde-vragen.html">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 10h.01M12 10h.01M16 10h.01"/><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.4A8.5 8.5 0 1 1 21 11.5z"/></svg></span>
+          <h3>Veelgestelde vragen</h3>
+          <p>Vind hier de veelgestelde vragen. Misschien staat je antwoord er al tussen.</p>
+        </a>
+        <a href="kalender.html">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M8 14h.01M12 14h.01M16 14h.01M8 17.5h.01M12 17.5h.01"/></svg></span>
+          <h3>Kalender</h3>
+          <p>Bekijk de komende activiteiten, wedstrijden en trainingen.</p>
+        </a>
+        <a href="trainingstijden.html">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <h3>Trainingen</h3>
+          <p>Alle trainingen netjes op een rij. Bekijk hier de trainingstijden.</p>
+        </a>
+        <a href="lid-worden.html">
+          <span class="quick-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></span>
+          <h3>Inschrijven</h3>
+          <p>Heb je een leuke proeftraining gehad, of wil je je direct inschrijven? Schrijf je in.</p>
+        </a>
       </div>
     </section>
 
-    <section id="over" class="section">
+    <section id="over" class="section section-alt">
       <div class="container about">
         <img class="about-crest" src="images/yvg-logo.png" alt="Clubwapen van YVG" width="240" height="292">
         <div>
-          <span class="eyebrow">Over de vereniging</span>
-          <h2>De grootste schaatsclub van Groningen</h2>
-          <p>YVG is opgericht in 1862 en stond in 1882 mee aan de wieg van de KNSB. Sinds 1993 is sportcentrum Kardinge onze thuisbaan.</p>
-          <p>Recreant of wedstrijdrijder, jong of oud: bij YVG schaats je samen met anderen. Buiten het ijsseizoen trainen we door met inline-skaten, fietsen en droogtraining.</p>
-          <p><a href="historie.html">Lees meer over de geschiedenis van YVG</a></p>
-          <div class="stats">
-            <div class="stat"><strong>1862</strong><span>opgericht</span></div>
-            <div class="stat"><strong>Kardinge</strong><span>thuisbaan sinds 1993</span></div>
-            <div class="stat"><strong>Hele jaar</strong><span>ijs, skeeler en fiets</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="lid-worden" class="cta-band">
-      <div class="container">
-        <h2>Word lid van YVG</h2>
-        <p>Train mee op het ijs in de winter en op skates en de fiets in de zomer. Kom eerst eens kijken of meedoen.</p>
-        <div class="hero-actions">
-          <a href="lid-worden.html" class="button button--light">Lid worden</a>
-          <a href="contact.html" class="button button--ghost">Proeftraining aanvragen</a>
+          <h2>YVG in de winter</h2>
+          <p>YVG staat voor IJsvereniging Groningen: de grootste schaatsclub van Groningen, met veel mogelijkheden voor schaatsers. Voor recreanten en wedstrijdrijders hebben we volop keuze, of je nu net begint of al ver gevorderd bent. Samen delen we één mooie sport: het schaatsen.</p>
+          <p>Al vele jaren is YVG een goede basis voor iedereen die wil leren schaatsen. Onze trainingen en wedstrijden zijn in sportcentrum Kardinge. Voor de fanatiekelingen gaan de trainingen in de zomer door, met <a href="inline-skaten.html">inline-skaten</a>, <a href="droogtraining.html">droogtraining</a> en <a href="fietstraining.html">fietstraining</a>.</p>
         </div>
       </div>
     </section>

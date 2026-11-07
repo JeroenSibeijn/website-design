@@ -10,7 +10,8 @@ website-design/
 ├── *.html                  Overige pagina's (jeugd.html, contact.html, …)
 ├── trainingsschema.html    Generator voor willekeurige trainingsschema's
 ├── css/style.css           Opmaak (kleuren en lettertypes bovenaan in :root)
-├── js/layout.js            Menu en footer van alle pagina's (menu staat bovenaan in MENU)
+├── js/layout.js            Kopfoto, menu, nieuwsblok en footer van alle pagina's
+│                           (menu in MENU, de 3 nieuwste berichten in NEWS)
 ├── js/oefeningen-ijs.js    Database: oefeningen op het ijs (langebaan)
 ├── js/oefeningen-droog.js  Database: oefeningen naast het ijs (droogtraining)
 └── images/                 Foto's en logo's
@@ -28,9 +29,9 @@ Zoek in de pagina's op `CONTROLEREN` voor plekken waar informatie verouderd was 
 ## Huisstijl
 
 Het design is gebaseerd op yvg.nl: clubgroen `#347631`, donkere footer, koppen in Ubuntu en tekst in Titillium Web.
-Alle kleuren staan bovenaan in `css/style.css` (ook voor donkere modus); de trainingsschema generator gebruikt dezelfde kleuren.
+Alle kleuren staan bovenaan in `css/style.css`. De site is altijd licht, net als yvg.nl; de trainingsschema generator gebruikt dezelfde kleuren.
 
-Foto's: zet ze in `images/` met deze namen, dan verschijnen ze vanzelf (zonder foto wordt een kleurverloop getoond):
+Foto's in `images/` (van yvg.nl; vervang ze gerust door eigen foto's met dezelfde naam):
 
 - `images/hero.jpg` – grote foto bovenaan de homepage
 - `images/jeugd.jpg`, `images/wedstrijd.jpg`, `images/recreatief.jpg` – de drie tegels

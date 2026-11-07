@@ -75,6 +75,11 @@ In de pagina's staan ze als `<!-- CONTROLEREN: ... -->`. Haal die opmerking weg 
 
 - op yvg.nl stond nog "Vanaf zaterdag 12 oktober 2024 starten de trainingen." Vul hier de startdatum van seizoen 2026-2027 in.
 
+## veelgestelde-vragen.html
+
+- op yvg.nl linkte dit antwoord naar administratie.yvg.nl/pages/16/lid-worden/, terwijl de pagina Lid worden naar AllUnited verwijst. Nu verwijst het naar lid-worden.html; controleer welk inschrijfadres juist is.
+- op yvg.nl stond hier "De baankaart wordt verstrekt door de YVG-ledenadministratie", maar op de contributiepagina staat dat je de baankaart zelf digitaal koopt bij KNSB Groningen/Drenthe. Hier is naar de contributiepagina verwezen; controleer wat juist is.
+
 ## vertrouwenscontactpersoon.html
 
 - op yvg.nl werd afwisselend over één en over meerdere vertrouwenscontactpersonen gesproken, maar er stond er maar één vermeld (Ben Emans, foto uit 2019). Controleer of hij nog vertrouwenscontactpersoon is en of er meer zijn; de tekst is nu in het enkelvoud.
