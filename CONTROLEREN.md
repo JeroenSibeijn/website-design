@@ -13,10 +13,15 @@ In de pagina's staan ze als `<!-- CONTROLEREN: ... -->`. Haal die opmerking weg 
 
 ## contact.html
 
-- op yvg.nl stonden hier contactformulieren (één per onderwerp) die de mail doorstuurden naar een vast adres. Een statische site kan geen formulieren versturen, daarom staan hier e-mailadressen. De adressen hieronder komen van andere pagina's van yvg.nl; controleer per onderwerp of het adres klopt met waar het formulier naartoe stuurde.
-- voor 'Overige vragen/opmerkingen' staat nergens op yvg.nl een e-mailadres. Vul hier het adres in waar dit formulier naartoe stuurde.
-- op yvg.nl stond voor de proeftrainingen geen e-mailadres, alleen formulieren. Proefleden worden volgens de site aangemeld door de trainerscoördinatoren (Afdeling Schaatsen); voor de jeugd is jeugdcommissie@yvg.nl gekozen. Controleer of deze adressen kloppen.
-- voor de financiële administratie is penningmeester@yvg.nl gebruikt (de penningmeester staat op de bestuurspagina bij 'Financiën'); voor de website communicatie@yvg.nl (de afdeling Communicatie beheert de website). Controleer of dit de juiste adressen zijn.
+De 9 formulieren van yvg.nl staan nu op de contactpagina en worden verstuurd door `verstuur.php`. Naar welk adres elk formulier gaat, staat in `php/config.php`. Op yvg.nl waren de ontvangers niet zichtbaar; controleer daarom deze adressen in `php/config.php`:
+
+- vragen over schaatsen → afdeling_schaatsen@yvg.nl; lidmaatschap → ledenadministratie@yvg.nl; inline-skaten → zomertraining@yvg.nl.
+- 'Overige vragen en opmerkingen' → info@yvg.nl. Op yvg.nl stond hiervoor nergens een adres.
+- proeftraining jeugd → jeugdcommissie@yvg.nl; proeftraining recreant en wedstrijdrijder → afdeling_schaatsen@yvg.nl. Proefleden worden volgens de site aangemeld door de trainerscoördinatoren (Afdeling Schaatsen).
+- financiële administratie → penningmeester@yvg.nl (de penningmeester staat op de bestuurspagina bij 'Financiën'); website → communicatie@yvg.nl (de afdeling Communicatie beheert de website).
+- afzender van de mails is website@yvg.nl. Gebruik een adres op het domein waar de site komt te staan, anders komen de mails in de spam.
+- de keuzes bij de proeftrainingen komen van de formulieren op yvg.nl, maar met de tijden van trainingstijden.html. Die verschilden: voor recreanten stond in het formulier 'dinsdag- en donderdagochtend 10:00-11:30', in het schema 9.30 – 11.00 uur. Voor de jeugd op woensdag stond in het formulier 16:30-17:45, terwijl de tijd volgens het schema afhangt van de leeftijd; daarom staat er nu 'woensdagmiddag'. Controleer de tijden.
+- in het vraagformulier is 'Je bericht' verplicht gemaakt (op yvg.nl was dat niet verplicht, wel het telefoonnummer).
 
 ## contributie.html
 
@@ -59,7 +64,7 @@ In de pagina's staan ze als `<!-- CONTROLEREN: ... -->`. Haal die opmerking weg 
 
 ## mijn-yvg.html
 
-- stap 2 en 4 noemen twee verschillende links ('Verstuur nieuw wachtwoord' en 'Nieuw wachtwoord aanvragen'); zo stond het op yvg.nl. Controleer of deze stappen en de wachtwoordeisen nog kloppen met het huidige inlogscherm van AllUnited.
+- de stappen zijn aangepast aan het huidige inlogscherm van AllUnited (knoppen 'Inloggen' en 'Nieuw wachtwoord aanvragen'). Controleer of de wachtwoordeisen (6 tekens, waarvan 2 cijfers) nog kloppen.
 
 ## nieuws.html
 
@@ -74,6 +79,11 @@ In de pagina's staan ze als `<!-- CONTROLEREN: ... -->`. Haal die opmerking weg 
 ## trainingstijden.html
 
 - op yvg.nl stond nog "Vanaf zaterdag 12 oktober 2024 starten de trainingen." Vul hier de startdatum van seizoen 2026-2027 in.
+
+## veelgestelde-vragen.html
+
+- op yvg.nl linkte dit antwoord naar administratie.yvg.nl/pages/16/lid-worden/, terwijl de pagina Lid worden naar AllUnited verwijst. Nu verwijst het naar lid-worden.html; controleer welk inschrijfadres juist is.
+- op yvg.nl stond hier "De baankaart wordt verstrekt door de YVG-ledenadministratie", maar op de contributiepagina staat dat je de baankaart zelf digitaal koopt bij KNSB Groningen/Drenthe. Hier is naar de contributiepagina verwezen; controleer wat juist is.
 
 ## vertrouwenscontactpersoon.html
 
